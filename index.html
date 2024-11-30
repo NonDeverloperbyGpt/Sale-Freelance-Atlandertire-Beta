@@ -89,6 +89,29 @@
       text-decoration: none;
       cursor: pointer;
     }
+    <style>
+  .form-group button {
+      background-color: #28a745;
+      color: white;
+      padding: 20px; /* ขนาดปุ่มใหญ่ขึ้น */
+      border: none;
+      border-radius: 8px; /* ขอบโค้งมน */
+      font-size: 22px; /* ขนาดตัวอักษรใหญ่ขึ้น */
+      cursor: pointer;
+      width: 100%; /* ให้ปุ่มเต็มความกว้าง */
+      max-width: 400px; /* จำกัดขนาดปุ่มสูงสุด */
+      margin: 20px auto; /* จัดกึ่งกลาง */
+      display: block; /* บล็อกปุ่ม */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* เพิ่มเงา */
+      transition: background-color 0.3s ease; /* เพิ่มเอฟเฟกต์เมื่อ hover */
+  }
+
+  .form-group button:hover {
+      background-color: #218838;
+      transform: scale(1.05); /* เพิ่มการขยายเล็กน้อยเมื่อ hover */
+  }
+</style>
+
   </style>
 </head>
 <body>
@@ -96,32 +119,32 @@
     <h2>แบบฟอร์มการบันทึกข้อมูล</h2>
     <form id="dataForm">
       <div class="form-group">
-        <label for="salesID">Sales ID:</label>
+        <label for="salesID">รหัสฝ่ายขาย Sales ID:</label>
         <input type="number" id="salesID" name="salesID" required onblur="fetchSalesName()">
       </div>
       <div class="form-group">
-        <label for="salesName">Sales Name:</label>
+        <label for="salesName">ชื่อฝ่ายขาย:</label>
         <input type="text" id="salesName" name="salesName" readonly>
       </div>
       <div class="form-group">
-        <label for="storeName">Store Name:</label>
+        <label for="storeName">ชื่อร้านค้า:</label>
         <input type="text" id="storeName" name="storeName" required>
       </div>
       <div class="form-group">
-        <label for="region">Region:</label>
+        <label for="region">พื้นที่จังหวัด:</label>
         <select id="region" name="region" required></select>
       </div>
       <div class="form-group">
-        <label for="location">Location:</label>
+        <label for="location">Location ตำแหน่งร้านค้า:</label>
         <input type="text" id="location" name="location" placeholder="ปักหมุดตำแหน่ง" readonly>
         <button type="button" onclick="getLocation()">ปักหมุด</button>
       </div>
      <div class="form-group">
-  <label for="photo1">Photo 1:</label>
+  <label for="photo1">รูปหน้าร้าน:</label>
   <input type="file" id="photo1" name="photo1" accept="image/*">
 </div>
 <div class="form-group">
-  <label for="photo2">Photo 2:</label>
+  <label for="photo2">รูปเซลและหน้าร้าน:</label>
   <input type="file" id="photo2" name="photo2" accept="image/*">
 </div>
 <div class="form-group">
@@ -133,18 +156,41 @@
   <input type="file" id="photo4" name="photo4" accept="image/*">
 </div>
       <div class="form-group">
-        <label for="phone">Phone:</label>
+        <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
         <input type="text" id="phone" name="phone" required>
       </div>
       <div class="form-group">
-        <label for="contactName">Contact Name:</label>
+        <label for="contactName">ชื่อผู้ติดต่อ เจ้าหน้าที่ร้านค้า:</label>
         <input type="text" id="contactName" name="contactName">
       </div>
       <div class="form-group">
-        <label for="contactPosition">Contact Position:</label>
+        <label for="contactPosition">ตำแหน่งงานผู้รับเรื่อง:</label>
         <input type="text" id="contactPosition" name="contactPosition">
       </div>
       <button type="button" onclick="submitForm()">บันทึกข้อมูล</button>
+      <style>
+  .form-group button { // ขนาดปุ่มปักหมุด เริ่มตรงนี้
+      background-color: #28a745;
+      color: white;
+      padding: 20px; /* ขนาดปุ่มใหญ่ขึ้น */
+      border: none;
+      border-radius: 8px; /* ขอบโค้งมน */
+      font-size: 22px; /* ขนาดตัวอักษรใหญ่ขึ้น */
+      cursor: pointer;
+      width: 100%; /* ให้ปุ่มเต็มความกว้าง */
+      max-width: 400px; /* จำกัดขนาดปุ่มสูงสุด */
+      margin: 20px auto; /* จัดกึ่งกลาง */
+      display: block; /* บล็อกปุ่ม */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* เพิ่มเงา */
+      transition: background-color 0.3s ease; /* เพิ่มเอฟเฟกต์เมื่อ hover */
+  }
+
+  .form-group button:hover {
+      background-color: #218838;
+      transform: scale(1.05); /* เพิ่มการขยายเล็กน้อยเมื่อ hover */
+  }
+</style> /* ใส่ข้อมูลให้ครบถ้วน หลังจากกดบันทึกข้อมูล รอ 2-3 วิ */
+
     </form>
   </div>
 
