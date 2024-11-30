@@ -278,3 +278,48 @@
   </script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>แบบฟอร์มการบันทึกข้อมูล</title>
+  <script>
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb.../exec"; // แปะ URL จาก Apps Script ที่ได้มา
+
+    function submitForm() {
+      const formData = new FormData(document.getElementById("dataForm"));
+      const jsonData = {};
+      formData.forEach((value, key) => (jsonData[key] = value));
+
+      // ส่งข้อมูลไปยัง Apps Script
+      fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(jsonData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          alert(data.message || "บันทึกข้อมูลสำเร็จ");
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+        });
+    }
+  </script>
+</head>
+<body>
+  <h2>แบบฟอร์มการบันทึกข้อมูล</h2>
+  <form id="dataForm">
+    <label>ชื่อฝ่ายขาย:</label>
+    <input type="text" name="salesName" required />
+    <label>ชื่อร้านค้า:</label>
+    <input type="text" name="storeName" required />
+    <label>รูปภาพ:</label>
+    <input type="file" name="photo1" accept="image/*" />
+    <button type="button" onclick="submitForm()">บันทึกข้อมูล</button>
+  </form>
+</body>
+</html>
