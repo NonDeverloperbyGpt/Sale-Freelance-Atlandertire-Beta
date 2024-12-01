@@ -17,13 +17,15 @@
     }
 
     .container {
-      width: 90%;
-      max-width: 600px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+  width: 90%;
+  max-width: 600px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  overflow-x: hidden;
+}
 
     h2 {
       text-align: center;
@@ -138,35 +140,37 @@
 
   <script>
     // Fetch data from API
-    window.addEventListener('load', async () => {
-      const salesDropdown = document.getElementById('salesName');
-      const regionDropdown = document.getElementById('region');
+window.addEventListener('load', async () => {
+  const salesDropdown = document.getElementById('salesName');
+  const regionDropdown = document.getElementById('region');
 
-      try {
-        // Fetch sales data
-        let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbxnRpKxWcA8Ra91OVV-mEoHoCX0ogjECAuntAOmENJJGG_YACJohnztu-sCiqM8A0NC/exec?action=getSales');
-        let salesData = await salesResponse.json();
-        salesData.forEach(sale => {
-          let option = document.createElement('option');
-          option.value = sale[0];
-          option.textContent = sale[1];
-          salesDropdown.appendChild(option);
-        });
-
-        // Fetch region data
-        let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbxnRpKxWcA8Ra91OVV-mEoHoCX0ogjECAuntAOmENJJGG_YACJohnztu-sCiqM8A0NC/exec?action=getRegions');
-        let regionData = await regionResponse.json();
-        regionData.forEach(region => {
-          let option = document.createElement('option');
-          option.value = region[0];
-          option.textContent = region[1];
-          regionDropdown.appendChild(option);
-        });
-      } catch (error) {
-        console.error('Error loading options:', error);
-        alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
-      }
+  try {
+    // Fetch sales data
+    let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbxnRpKxWcA8Ra91OVV-mEoHoCX0ogjECAuntAOmENJJGG_YACJohnztu-sCiqM8A0NC/exec?action=getSales');
+    if (!salesResponse.ok) throw new Error('Error fetching sales data');
+    let salesData = await salesResponse.json();
+    salesData.forEach(sale => {
+      let option = document.createElement('option');
+      option.value = sale[0];
+      option.textContent = sale[1];
+      salesDropdown.appendChild(option);
     });
+
+    // Fetch region data
+    let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbxnRpKxWcA8Ra91OVV-mEoHoCX0ogjECAuntAOmENJJGG_YACJohnztu-sCiqM8A0NC/exec?action=getRegions');
+    if (!regionResponse.ok) throw new Error('Error fetching region data');
+    let regionData = await regionResponse.json();
+    regionData.forEach(region => {
+      let option = document.createElement('option');
+      option.value = region[0];
+      option.textContent = region[1];
+      regionDropdown.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Error loading options:', error);
+    alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
+  }
+});
 
     // Handle location sharing
     document.getElementById('shareLocation').addEventListener('click', () => {
