@@ -1,52 +1,155 @@
-window.addEventListener('load', async () => {
-  const salesDropdown = document.getElementById('salesName');
-  const regionDropdown = document.getElementById('region');
-
-  try {
-    // Fetch sales data
-    let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getSales');
-    let salesData = await salesResponse.json();
-    salesData.forEach(sale => {
-      let option = document.createElement('option');
-      option.value = sale[0];
-      option.textContent = sale[1];
-      salesDropdown.appendChild(option);
-    });
-
-    // Fetch region data
-    let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getRegions');
-    let regionData = await regionResponse.json();
-    regionData.forEach(region => {
-      let option = document.createElement('option');
-      option.value = region[0];
-      option.textContent = region[1];
-      regionDropdown.appendChild(option);
-    });
-  } catch (error) {
-    console.error('Error loading options:', error);
-  }
-});
-
-// Handle form submission
-const formElement = document.getElementById('dataForm');
-if (formElement) {
-  formElement.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-
-    try {
-      let response = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=submitForm', {
-        method: 'POST',
-        body: JSON.stringify(Object.fromEntries(formData)),
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      let result = await response.json();
-      alert(result.message);
-      event.target.reset();
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบฟอร์มการบันทึกข้อมูล</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-  });
-}
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .form-group button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .form-group button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>แบบฟอร์มการบันทึกข้อมูล</h2>
+    <form id="dataForm">
+      <!-- Sales Dropdown -->
+      <div class="form-group">
+        <label for="salesName">ชื่อฝ่ายขาย:</label>
+        <select id="salesName" name="salesName" required>
+          <option value="">เลือกชื่อฝ่ายขาย</option>
+        </select>
+      </div>
+
+      <!-- Region Dropdown -->
+      <div class="form-group">
+        <label for="region">พื้นที่จังหวัด:</label>
+        <select id="region" name="region" required>
+          <option value="">เลือกจังหวัด</option>
+        </select>
+      </div>
+
+      <!-- Store Name -->
+      <div class="form-group">
+        <label for="storeName">ชื่อร้านค้า:</label>
+        <input type="text" id="storeName" name="storeName" required>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-group">
+        <button type="submit">บันทึกข้อมูล</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    window.addEventListener('load', async () => {
+      const salesDropdown = document.getElementById('salesName');
+      const regionDropdown = document.getElementById('region');
+
+      try {
+        // Fetch sales data
+        let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getSales');
+        let salesData = await salesResponse.json();
+        salesData.forEach(sale => {
+          let option = document.createElement('option');
+          option.value = sale[0];
+          option.textContent = sale[1];
+          salesDropdown.appendChild(option);
+        });
+
+        // Fetch region data
+        let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getRegions');
+        let regionData = await regionResponse.json();
+        regionData.forEach(region => {
+          let option = document.createElement('option');
+          option.value = region[0];
+          option.textContent = region[1];
+          regionDropdown.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading options:', error);
+        alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+      }
+    });
+
+    // Handle form submission
+    document.getElementById('dataForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+
+      try {
+        let response = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=submitForm', {
+          method: 'POST',
+          body: JSON.stringify(Object.fromEntries(formData)),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        let result = await response.json();
+        alert(result.message);
+        event.target.reset();
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
+      }
+    });
+  </script>
+</body>
+</html>
