@@ -45,63 +45,53 @@
     </form>
   </div>
 
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbyzPY3Lw9dkMV7JWIhss-3DrF3PHQ9zJt0jyxUMkNS4X7BsedCj6zTLTqoWygTOgonE/exec';
+<script>
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbyzPY3Lw9dkMV7JWIhss-3DrF3PHQ9zJt0jyxUMkNS4X7BsedCj6zTLTqoWygTOgonE/exec';
 
-    async function loadOptions() {
-      try {
-        const salesResponse = await fetch(`${scriptURL}?action=getSales`);
-        const regionsResponse = await fetch(`${scriptURL}?action=getRegions`);
+  async function loadOptions() {
+    try {
+      const salesResponse = await fetch(`${scriptURL}?action=getSales`);
+      const regionsResponse = await fetch(`${scriptURL}?action=getRegions`);
 
-        const salesData = await salesResponse.json();
-        const regionsData = await regionsResponse.json();
+      const salesData = await salesResponse.json();
+      const regionsData = await regionsResponse.json();
 
-        const salesSelect = document.getElementById('salesName');
-        const regionSelect = document.getElementById('region');
+      const salesSelect = document.getElementById('salesName');
+      const regionSelect = document.getElementById('region');
 
-        salesData.forEach(([id, name]) => {
-          const option = document.createElement('option');
-          option.value = id;
-          option.textContent = name;
-          salesSelect.appendChild(option);
-        });
+      salesData.forEach(([id, name]) => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = name;
+        salesSelect.appendChild(option);
+      });
 
-        regionsData.forEach(([id, name]) => {
-          const option = document.createElement('option');
-          option.value = id;
-          option.textContent = name;
-          regionSelect.appendChild(option);
-        });
-      } catch (error) {
-        alert('ไม่สามารถโหลดข้อมูลได้');
-      }
+      regionsData.forEach(([id, name]) => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = name;
+        regionSelect.appendChild(option);
+      });
+    } catch (error) {
+      alert('ไม่สามารถโหลดข้อมูลได้');
     }
+  }
 
-    document.getElementById('shareLocation').addEventListener('click', () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            document.getElementById('location').value = `${position.coords.latitude}, ${position.coords.longitude}`;
-          },
-          () => alert('ไม่สามารถแชร์ตำแหน่งได้')
-        );
-      }
-    });
+  document.getElementById('dataForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
 
-    document.getElementById('dataForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.target);
-      try {
-        const response = await fetch(scriptURL, { method: 'POST', body: formData });
-        const result = await response.json();
-        alert(result.message || 'บันทึกข้อมูลสำเร็จ');
-        event.target.reset();
-      } catch (error) {
-        alert('ไม่สามารถบันทึกข้อมูลได้');
-      }
-    });
+    try {
+      const response = await fetch(scriptURL, { method: 'POST', body: formData });
+      const result = await response.json();
+      alert(result.message || 'บันทึกข้อมูลสำเร็จ');
+      event.target.reset();
+    } catch (error) {
+      alert('ไม่สามารถบันทึกข้อมูลได้');
+    }
+  });
 
-    loadOptions();
-  </script>
+  loadOptions();
+</script>
 </body>
 </html>
