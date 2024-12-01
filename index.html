@@ -5,43 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แบบฟอร์มบันทึกข้อมูล</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-    }
-    .container {
-      max-width: 600px;
-      margin: 20px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    .form-group input, .form-group select, .form-group button {
-      width: 100%;
-      padding: 10px;
-      font-size: 14px;
-      margin: 5px 0;
-    }
-    .form-group button {
-      background: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
+    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+    h2 { text-align: center; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; }
+    .form-group input, .form-group select, .form-group button { width: 100%; padding: 10px; margin: 5px 0; }
+    .form-group button { background: #007bff; color: #fff; border: none; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -50,21 +20,15 @@
     <form id="dataForm">
       <div class="form-group">
         <label for="salesName">ชื่อฝ่ายขาย:</label>
-        <select id="salesName" name="salesName" required></select>
+        <input type="text" id="salesName" name="SalesName" required>
       </div>
       <div class="form-group">
         <label for="region">จังหวัด:</label>
-        <select id="region" name="region" required></select>
+        <input type="text" id="region" name="Region" required>
       </div>
       <div class="form-group">
         <label for="storeName">ชื่อร้านค้า:</label>
-        <input type="text" id="storeName" name="storeName" required>
-      </div>
-      <!-- Location Sharing -->
-      <div class="form-group">
-        <label for="location">ตำแหน่งร้านค้า:</label>
-        <input type="text" id="location" name="location" readonly>
-        <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
+        <input type="text" id="storeName" name="StoreName" required>
       </div>
       <div class="form-group">
         <button type="submit">บันทึกข้อมูล</button>
@@ -75,74 +39,20 @@
   <script>
     const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
 
-    // Fetch dropdown options
-    async function loadOptions() {
-      try {
-        const salesResponse = await fetch(`${scriptURL}?action=getSales`);
-        const regionsResponse = await fetch(`${scriptURL}?action=getRegions`);
-
-        const salesData = await salesResponse.json();
-        const regionsData = await regionsResponse.json();
-
-        const salesSelect = document.getElementById('salesName');
-        const regionSelect = document.getElementById('region');
-
-        salesData.forEach(([id, name]) => {
-          const option = document.createElement('option');
-          option.value = id;
-          option.textContent = name;
-          salesSelect.appendChild(option);
-        });
-
-        regionsData.forEach(([id, name]) => {
-          const option = document.createElement('option');
-          option.value = id;
-          option.textContent = name;
-          regionSelect.appendChild(option);
-        });
-      } catch (error) {
-        console.error('Error loading options:', error);
-        alert('ไม่สามารถโหลดข้อมูลได้');
-      }
-    }
-
-    // Handle location sharing
-    document.getElementById('shareLocation').addEventListener('click', () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const locationField = document.getElementById('location');
-            locationField.value = `${position.coords.latitude}, ${position.coords.longitude}`;
-          },
-          error => {
-            alert('ไม่สามารถเข้าถึงตำแหน่งได้');
-          }
-        );
-      } else {
-        alert('เบราว์เซอร์ของคุณไม่รองรับการแชร์ตำแหน่ง');
-      }
-    });
-
-    // Submit form
-    document.getElementById('dataForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.target);
+    document.getElementById('dataForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
 
       try {
-        const response = await fetch(scriptURL, {
-          method: 'POST',
-          body: formData
-        });
+        const response = await fetch(scriptURL, { method: 'POST', body: formData });
         const result = await response.json();
         alert(result.message || 'บันทึกข้อมูลสำเร็จ');
-        event.target.reset();
+        e.target.reset();
       } catch (error) {
-        console.error('Error submitting form:', error);
+        console.error('Error:', error);
         alert('ไม่สามารถบันทึกข้อมูลได้');
       }
     });
-
-    loadOptions();
   </script>
 </body>
 </html>
