@@ -1,0 +1,11 @@
+{
+  "salesName": "John Doe",
+  "storeName": "Store ABC",
+  "region": "Bangkok",
+  "location": "Latitude: 13.7563, Longitude: 100.5018",
+  "photo1": "base64_encoded_image_data_here",
+  "photo2": "base64_encoded_image_data_here",
+  "phone": "123456789",
+  "contactName": "Jane Smith",
+  "contactPosition": "Manager"
+}
