@@ -1,247 +1,49 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>แบบฟอร์มการบันทึกข้อมูล</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+    document.addEventListener('DOMContentLoaded', async () => {
+      const salesDropdown = document.getElementById('salesName');
+      const regionDropdown = document.getElementById('region');
 
-    .container {
-      width: 90%;
-      max-width: 600px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      box-sizing: border-box;
-    }
-
-    h2 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 14px;
-      color: #555;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group button {
-      width: 100%;
-      padding: 10px;
-      font-size: 14px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    .form-group button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 18px; /* ปรับขนาดปุ่มให้ใหญ่ขึ้น */
-      padding: 12px; /* เพิ่ม padding ให้ปุ่มใหญ่ */
-    }
-
-    .form-group button:hover {
-      background-color: #0056b3;
-    }
-
-    .form-group .location-btn {
-      background-color: #28a745;
-      margin-top: 10px;
-    }
-
-    .form-group .location-btn:hover {
-      background-color: #218838;
-    }
-
-    /* Media Queries for Tablet */
-    @media (max-width: 768px) {
-      .container {
-        width: 95%;
-        padding: 15px;
-      }
-
-      .form-group input,
-      .form-group select,
-      .form-group button {
-        font-size: 13px;
-        padding: 8px;
-      }
-
-      h2 {
-        font-size: 20px;
-      }
-    }
-
-    /* Media Queries for Mobile */
-    @media (max-width: 480px) {
-      .container {
-        width: 100%;
-        padding: 10px;
-      }
-
-      .form-group input,
-      .form-group select,
-      .form-group button {
-        font-size: 12px;
-        padding: 6px;
-      }
-
-      h2 {
-        font-size: 18px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>แบบฟอร์มการบันทึกข้อมูล</h2>
-    <form 
-      action="https://script.google.com/macros/s/AKfycbxGpxKsjbLX3nebiR4lZQdwQt8qr_40HLFTgSryjL8nOgzxVHSF3n0JoOaU8TkKCqAa/exec" 
-      method="POST" 
-      enctype="multipart/form-data"
-    >
-      <!-- Sales ID -->
-      <div class="form-group">
-        <label for="salesID">รหัสฝ่ายขาย Sales ID:</label>
-        <input type="number" id="salesID" name="salesID" required>
-      </div>
-
-      <!-- Sales Name -->
-      <div class="form-group">
-        <label for="salesName">ชื่อฝ่ายขาย:</label>
-        <input type="text" id="salesName" name="salesName" readonly>
-      </div>
-
-      <!-- Store Name -->
-      <div class="form-group">
-        <label for="storeName">ชื่อร้านค้า:</label>
-        <input type="text" id="storeName" name="storeName" required>
-      </div>
-
-      <!-- Region -->
-      <div class="form-group">
-        <label for="region">พื้นที่จังหวัด:</label>
-        <select id="region" name="region" required>
-          <!-- ตัวเลือกจังหวัด -->
-        </select>
-      </div>
-
-      <!-- Location -->
-      <div class="form-group">
-        <label for="location">ตำแหน่งร้านค้า:</label>
-        <input type="text" id="location" name="location" readonly>
-        <button type="button" class="location-btn" onclick="getLocation()">แชร์ตำแหน่ง</button>
-      </div>
-
-      <!-- Photo 1 -->
-      <div class="form-group">
-        <label for="photo1">รูปหน้าร้าน:</label>
-        <input type="file" id="photo1" name="photo1" accept="image/*">
-      </div>
-
-      <!-- Photo 2 -->
-      <div class="form-group">
-        <label for="photo2">รูปเซลและหน้าร้าน:</label>
-        <input type="file" id="photo2" name="photo2" accept="image/*">
-      </div>
-
-      <!-- Phone -->
-      <div class="form-group">
-        <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
-        <input type="text" id="phone" name="phone" required>
-      </div>
-
-      <!-- Contact Name -->
-      <div class="form-group">
-        <label for="contactName">ชื่อผู้ติดต่อ:</label>
-        <input type="text" id="contactName" name="contactName">
-      </div>
-
-      <!-- Contact Position -->
-      <div class="form-group">
-        <label for="contactPosition">ตำแหน่งงานผู้รับเรื่อง:</label>
-        <input type="text" id="contactPosition" name="contactPosition">
-      </div>
-
-      <!-- Submit Button -->
-      <div class="form-group">
-        <button type="submit">บันทึกข้อมูล</button>
-      </div>
-    </form>
-  </div>
-
-  <script> // เริมตรงนี้ตัวเชื่อมโยง
-    // ฟังก์ชันสำหรับแชร์ตำแหน่ง 
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const coords = `${position.coords.latitude}, ${position.coords.longitude}`;
-          document.getElementById('location').value = coords;
-        }, (error) => {
-          alert('ไม่สามารถแชร์ตำแหน่งได้: ' + error.message);
+      try {
+        // Fetch sales data
+        let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getSales');
+        let salesData = await salesResponse.json();
+        salesData.forEach(sale => {
+          let option = document.createElement('option');
+          option.value = sale[0];
+          option.textContent = sale[1];
+          salesDropdown.appendChild(option);
         });
-      } else {
-        alert('เบราว์เซอร์ของคุณไม่รองรับการแชร์ตำแหน่ง');
+
+        // Fetch region data
+        let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getRegions');
+        let regionData = await regionResponse.json();
+        regionData.forEach(region => {
+          let option = document.createElement('option');
+          option.value = region[0];
+          option.textContent = region[1];
+          regionDropdown.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading options:', error);
       }
-    }
-  </script>
-</body>
-</html>
-
-<script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzvHHeiy6uK5gUaZjJ8MgxZa6_m2X0NZEMi5Rku4Is/dev';
-
-// ดึงชื่อฝ่ายขายเมื่อป้อน Sales ID
-document.getElementById('salesID').addEventListener('input', async (event) => {
-  const salesID = event.target.value;
-  if (salesID) {
-    try {
-      const response = await fetch(`${API_URL}?action=getSalesName&salesID=${salesID}`);
-      const data = await response.json();
-      document.getElementById('salesName').value = data.salesName || 'ไม่พบข้อมูล';
-    } catch (error) {
-      alert('เกิดข้อผิดพลาด: ' + error.message);
-    }
-  }
-});
-
-// โหลดจังหวัดเมื่อโหลดหน้า
-window.onload = async () => {
-  try {
-    const response = await fetch(`${API_URL}?action=getRegions`);
-    const regions = await response.json();
-
-    const regionSelect = document.getElementById('region');
-    regions.forEach(([name, code]) => {
-      const option = document.createElement('option');
-      option.value = code;
-      option.textContent = name;
-      regionSelect.appendChild(option);
     });
-  } catch (error) {
-    alert('ไม่สามารถโหลดจังหวัดได้: ' + error.message);
-  }
-};
+
+    // Handle form submission
+    document.getElementById('dataForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+
+      try {
+        let response = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=submitForm', {
+          method: 'POST',
+          body: JSON.stringify(Object.fromEntries(formData)),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        let result = await response.json();
+        alert(result.message);
+        event.target.reset();
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
+      }
+    });
