@@ -99,10 +99,34 @@
         <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
       </div>
 
+      <!-- Phone -->
+      <div class="form-group">
+        <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
+        <input type="text" id="phone" name="phone" required>
+      </div>
+
       <!-- Contact Name -->
       <div class="form-group">
         <label for="contactName">ชื่อผู้ติดต่อ:</label>
         <input type="text" id="contactName" name="contactName" required>
+      </div>
+
+      <!-- Contact Position -->
+      <div class="form-group">
+        <label for="contactPosition">ตำแหน่งงานผู้รับเรื่อง:</label>
+        <input type="text" id="contactPosition" name="contactPosition" required>
+      </div>
+
+      <!-- Photo1 -->
+      <div class="form-group">
+        <label for="photo1">รูปหน้าร้าน:</label>
+        <input type="file" id="photo1" name="photo1" accept="image/*" required>
+      </div>
+
+      <!-- Photo2 -->
+      <div class="form-group">
+        <label for="photo2">รูปเซลและหน้าร้าน:</label>
+        <input type="file" id="photo2" name="photo2" accept="image/*" required>
       </div>
 
       <!-- Submit Button -->
@@ -120,7 +144,7 @@
 
       try {
         // Fetch sales data
-        let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbzrvrfjdMbJdkStPJ2f0c9NPuR9xLTCLdS2fU7RcPRVv25h98kg7PMx-FUswOwaAEmM/exec?action=getSales');
+        let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbxnRpKxWcA8Ra91OVV-mEoHoCX0ogjECAuntAOmENJJGG_YACJohnztu-sCiqM8A0NC/exec?action=getSales');
         let salesData = await salesResponse.json();
         salesData.forEach(sale => {
           let option = document.createElement('option');
@@ -130,7 +154,7 @@
         });
 
         // Fetch region data
-        let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbzrvrfjdMbJdkStPJ2f0c9NPuR9xLTCLdS2fU7RcPRVv25h98kg7PMx-FUswOwaAEmM/exec?action=getRegions');
+        let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbxnRpKxWcA8Ra91OVV-mEoHoCX0ogjECAuntAOmENJJGG_YACJohnztu-sCiqM8A0NC/exec?action=getRegions');
         let regionData = await regionResponse.json();
         regionData.forEach(region => {
           let option = document.createElement('option');
@@ -167,10 +191,9 @@
       const formData = new FormData(event.target);
 
       try {
-        let response = await fetch('https://script.google.com/macros/s/AKfycbzrvrfjdMbJdkStPJ2f0c9NPuR9xLTCLdS2fU7RcPRVv25h98kg7PMx-FUswOwaAEmM/exec?action=submitForm', {
+        let response = await fetch('https://script.google.com/macros/s/AKfycbxnRpKxWcA8Ra91OVV-mEoHoCX0ogjECAuntAOmENJJGG_YACJohnztu-sCiqM8A0NC/exec?action=submitForm', {
           method: 'POST',
-          body: JSON.stringify(Object.fromEntries(formData)),
-          headers: { 'Content-Type': 'application/json' }
+          body: formData // ใช้ FormData ส่งข้อมูลไปยัง Google Apps Script
         });
 
         let result = await response.json();
