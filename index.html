@@ -1,196 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding-top: 20px;
-    }
-    .container {
-      width: 95%;
-      max-width: 500px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      font-size: 14px;
-      display: block;
-      margin-bottom: 5px;
-    }
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 10px;
-      font-size: 14px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    .form-group button {
-      background-color: #28a745;
-      color: white;
-      padding: 15px;
-      border: none;
-      border-radius: 4px;
-      font-size: 18px;
-      cursor: pointer;
-      width: 100%;
-    }
-    .form-group button:hover {
-      background-color: #218838;
-    }
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-    .modal-content {
-      background-color: #fff;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-      max-width: 400px;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .modal-content h2 {
-      margin: 0 0 20px;
-      color: #333;
-    }
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>แบบฟอร์มการบันทึกข้อมูล</h2>
-    <form id="dataForm">
-      <div class="form-group">
-        <label for="salesID">รหัสฝ่ายขาย Sales ID:</label>
-        <input type="number" id="salesID" name="salesID" required>
-      </div>
-      <div class="form-group">
-        <label for="salesName">ชื่อฝ่ายขาย:</label>
-        <input type="text" id="salesName" name="salesName" readonly>
-      </div>
-      <div class="form-group">
-        <label for="storeName">ชื่อร้านค้า:</label>
-        <input type="text" id="storeName" name="storeName" required>
-      </div>
-      <div class="form-group">
-        <label for="region">พื้นที่จังหวัด:</label>
-        <select id="region" name="region" required>
-          <!-- Options will be added dynamically -->
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="location">ตำแหน่งร้านค้า:</label>
-        <input type="text" id="location" name="location" readonly>
-        <button type="button" onclick="getLocation()">ปักหมุด</button>
-      </div>
-      <div class="form-group">
-        <label for="photo1">รูปหน้าร้าน:</label>
-        <input type="file" id="photo1" name="photo1" accept="image/*">
-      </div>
-      <div class="form-group">
-        <label for="photo2">รูปเซลและหน้าร้าน:</label>
-        <input type="file" id="photo2" name="photo2" accept="image/*">
-      </div>
-      <div class="form-group">
-        <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
-        <input type="text" id="phone" name="phone" required>
-      </div>
-      <div class="form-group">
-        <label for="contactName">ชื่อผู้ติดต่อ:</label>
-        <input type="text" id="contactName" name="contactName">
-      </div>
-      <div class="form-group">
-        <label for="contactPosition">ตำแหน่งงานผู้รับเรื่อง:</label>
-        <input type="text" id="contactPosition" name="contactPosition">
-      </div>
-      <button type="button" onclick="submitForm()">บันทึกข้อมูล</button>
-    </form>
-  </div>
+<form action="https://script.google.com/macros/s/AKfycbyMwrIUZvLJ_jdndGBmarXZmtgn1BrnJroE9SJa7x-xouN0ONyDbQfo5RIliNFX1MGb/exec" 
+      method="POST" 
+      enctype="multipart/form-data">
+  <!-- ฟิลด์ของฟอร์ม -->
+  <label for="salesID">รหัสฝ่ายขาย Sales ID:</label>
+  <input type="number" id="salesID" name="salesID" required>
 
-  <!-- Modal -->
-  <div id="successModal" class="modal">
-    <div class="modal-content">
-      <h2>บันทึกข้อมูลสำเร็จ!</h2>
-      <button onclick="closeModal()">ปิดหน้าต่าง</button>
-    </div>
-  </div>
+  <label for="salesName">ชื่อฝ่ายขาย:</label>
+  <input type="text" id="salesName" name="salesName" readonly>
 
-  <script>
-    function getLocation() {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const coords = `${position.coords.latitude}, ${position.coords.longitude}`;
-        document.getElementById('location').value = coords;
-      });
-    }
+  <label for="storeName">ชื่อร้านค้า:</label>
+  <input type="text" id="storeName" name="storeName" required>
 
-    function submitForm() {
-      const form = document.getElementById('dataForm');
-      const formData = new FormData(form);
+  <label for="region">พื้นที่จังหวัด:</label>
+  <select id="region" name="region" required>
+    <!-- ตัวเลือกจังหวัด -->
+  </select>
 
-      google.script.run
-        .withSuccessHandler(() => {
-          openModal();
-          form.reset();
-        })
-        .submitData(Object.fromEntries(formData));
-    }
+  <label for="location">ตำแหน่งร้านค้า:</label>
+  <input type="text" id="location" name="location" required>
 
-    function openModal() {
-      document.getElementById('successModal').style.display = "block";
-    }
+  <label for="photo1">รูปหน้าร้าน:</label>
+  <input type="file" id="photo1" name="photo1" accept="image/*">
 
-    function closeModal() {
-      document.getElementById('successModal').style.display = "none";
-    }
+  <label for="photo2">รูปเซลและหน้าร้าน:</label>
+  <input type="file" id="photo2" name="photo2" accept="image/*">
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // Load regions from server or script
-      google.script.run
-        .withSuccessHandler((regions) => {
-          const regionSelect = document.getElementById('region');
-          regions.forEach((region) => {
-            const option = document.createElement('option');
-            option.value = region;
-            option.textContent = region;
-            regionSelect.appendChild(option);
-          });
-        })
-        .getRegions();
-    });
-  </script>
-</body>
-</html>
+  <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
+  <input type="text" id="phone" name="phone" required>
+
+  <label for="contactName">ชื่อผู้ติดต่อ:</label>
+  <input type="text" id="contactName" name="contactName">
+
+  <label for="contactPosition">ตำแหน่งงานผู้รับเรื่อง:</label>
+  <input type="text" id="contactPosition" name="contactPosition">
+
+  <button type="submit">บันทึกข้อมูล</button>
+</form>
