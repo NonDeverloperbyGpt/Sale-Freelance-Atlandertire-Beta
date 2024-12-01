@@ -23,6 +23,7 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
     }
 
     h2 {
@@ -58,11 +59,21 @@
       color: white;
       border: none;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 18px; /* ปรับขนาดปุ่มให้ใหญ่ขึ้น */
+      padding: 12px; /* เพิ่ม padding ให้ปุ่มใหญ่ */
     }
 
     .form-group button:hover {
       background-color: #0056b3;
+    }
+
+    .form-group .location-btn {
+      background-color: #28a745;
+      margin-top: 10px;
+    }
+
+    .form-group .location-btn:hover {
+      background-color: #218838;
     }
 
     /* Media Queries for Tablet */
@@ -141,7 +152,8 @@
       <!-- Location -->
       <div class="form-group">
         <label for="location">ตำแหน่งร้านค้า:</label>
-        <input type="text" id="location" name="location" required>
+        <input type="text" id="location" name="location" readonly>
+        <button type="button" class="location-btn" onclick="getLocation()">แชร์ตำแหน่ง</button>
       </div>
 
       <!-- Photo 1 -->
@@ -180,5 +192,21 @@
       </div>
     </form>
   </div>
+
+  <script>
+    // ฟังก์ชันสำหรับแชร์ตำแหน่ง
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const coords = `${position.coords.latitude}, ${position.coords.longitude}`;
+          document.getElementById('location').value = coords;
+        }, (error) => {
+          alert('ไม่สามารถแชร์ตำแหน่งได้: ' + error.message);
+        });
+      } else {
+        alert('เบราว์เซอร์ของคุณไม่รองรับการแชร์ตำแหน่ง');
+      }
+    }
+  </script>
 </body>
 </html>
