@@ -3,29 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>แบบฟอร์มการบันทึกข้อมูล</title>
+  <title>แบบฟอร์มบันทึกข้อมูล</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: #f5f5f5;
     }
     .container {
-      width: 90%;
       max-width: 600px;
+      margin: 20px auto;
       background: #fff;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     h2 {
       text-align: center;
-      color: #333;
       margin-bottom: 20px;
     }
     .form-group {
@@ -34,160 +29,123 @@
     .form-group label {
       display: block;
       margin-bottom: 5px;
-      font-size: 14px;
-      color: #555;
     }
-    .form-group input,
-    .form-group select,
-    .form-group button {
+    .form-group input, .form-group select, .form-group button {
       width: 100%;
       padding: 10px;
       font-size: 14px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-sizing: border-box;
+      margin: 5px 0;
     }
     .form-group button {
-      background-color: #007bff;
-      color: white;
+      background: #007bff;
+      color: #fff;
       border: none;
       cursor: pointer;
-      font-size: 16px;
-    }
-    .form-group button:hover {
-      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>แบบฟอร์มบันทึกเข้าพบลูกค้าใหม่</h2>
+    <h2>แบบฟอร์มบันทึกข้อมูล</h2>
     <form id="dataForm">
-      <!-- Sales Dropdown -->
       <div class="form-group">
         <label for="salesName">ชื่อฝ่ายขาย:</label>
-        <select id="salesName" name="salesName" required>
-          <option value="">เลือกชื่อฝ่ายขาย</option>
-        </select>
+        <select id="salesName" name="salesName" required></select>
       </div>
-
-      <!-- Region Dropdown -->
       <div class="form-group">
-        <label for="region">พื้นที่จังหวัด:</label>
-        <select id="region" name="region" required>
-          <option value="">เลือกจังหวัด</option>
-        </select>
+        <label for="region">จังหวัด:</label>
+        <select id="region" name="region" required></select>
       </div>
-
-      <!-- Store Name -->
       <div class="form-group">
         <label for="storeName">ชื่อร้านค้า:</label>
         <input type="text" id="storeName" name="storeName" required>
       </div>
-
-      <!-- Location Sharing -->
-      <div class="form-group">
-        <label for="location">ตำแหน่งร้านค้า:</label>
-        <input type="text" id="location" name="location" readonly>
-        <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
-      </div>
-
-      <!-- Phone -->
-      <div class="form-group">
-        <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
-        <input type="text" id="phone" name="phone" required>
-      </div>
-
-      <!-- Contact Name -->
-      <div class="form-group">
-        <label for="contactName">ชื่อผู้ติดต่อ:</label>
-        <input type="text" id="contactName" name="contactName" required>
-      </div>
-
-      <!-- Contact Position -->
-      <div class="form-group">
-        <label for="contactPosition">ตำแหน่งงานผู้รับเรื่อง:</label>
-        <input type="text" id="contactPosition" name="contactPosition" required>
-      </div>
-
-      <!-- Submit Button -->
       <div class="form-group">
         <button type="submit">บันทึกข้อมูล</button>
       </div>
+      <div class="form-group">
+  <label for="location">ตำแหน่งร้านค้า:</label>
+  <input type="text" id="location" name="location" readonly>
+  <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
+</div>
+<div class="form-group">
+  <label for="photo1">รูปหน้าร้าน:</label>
+  <input type="file" id="photo1" name="photo1" accept="image/*">
+</div>
+<div class="form-group">
+  <label for="photo2">รูปเซลและหน้าร้าน:</label>
+  <input type="file" id="photo2" name="photo2" accept="image/*">
+</div>
+<div class="form-group">
+  <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
+  <input type="text" id="phone" name="phone" required>
+</div>
+<div class="form-group">
+  <label for="contactName">ชื่อผู้ติดต่อ:</label>
+  <input type="text" id="contactName" name="contactName" required>
+</div>
+<div class="form-group">
+  <label for="contactPosition">ตำแหน่งงานผู้รับเรื่อง:</label>
+  <input type="text" id="contactPosition" name="contactPosition" required>
+</div>
+
     </form>
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxGeGD2TvOkWH2M_ldPaZQXQ1NfV5iuDQ6xT8BKjjuoB3UBcy9DZ3RRvOOlMPgNxvMd/exec';
+    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
 
-    // Fetch data from API
-    window.addEventListener('load', async () => {
-      const salesDropdown = document.getElementById('salesName');
-      const regionDropdown = document.getElementById('region');
-
+    // Fetch dropdown options
+    async function loadOptions() {
       try {
-        // Fetch sales data
-        let salesResponse = await fetch(`${scriptURL}?action=getSales`);
-        if (!salesResponse.ok) throw new Error('Error fetching sales data');
-        let salesData = await salesResponse.json();
-        salesData.forEach(sale => {
-          let option = document.createElement('option');
-          option.value = sale[0];
-          option.textContent = sale[1];
-          salesDropdown.appendChild(option);
+        const salesResponse = await fetch(`${scriptURL}?action=getSales`);
+        const regionsResponse = await fetch(`${scriptURL}?action=getRegions`);
+
+        const salesData = await salesResponse.json();
+        const regionsData = await regionsResponse.json();
+
+        const salesSelect = document.getElementById('salesName');
+        const regionSelect = document.getElementById('region');
+
+        salesData.forEach(([id, name]) => {
+          const option = document.createElement('option');
+          option.value = id;
+          option.textContent = name;
+          salesSelect.appendChild(option);
         });
 
-        // Fetch region data
-        let regionResponse = await fetch(`${scriptURL}?action=getRegions`);
-        if (!regionResponse.ok) throw new Error('Error fetching region data');
-        let regionData = await regionResponse.json();
-        regionData.forEach(region => {
-          let option = document.createElement('option');
-          option.value = region[0];
-          option.textContent = region[1];
-          regionDropdown.appendChild(option);
+        regionsData.forEach(([id, name]) => {
+          const option = document.createElement('option');
+          option.value = id;
+          option.textContent = name;
+          regionSelect.appendChild(option);
         });
       } catch (error) {
         console.error('Error loading options:', error);
-        alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
+        alert('ไม่สามารถโหลดข้อมูลได้');
       }
-    });
+    }
 
-    // Handle location sharing
-    document.getElementById('shareLocation').addEventListener('click', () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const locationField = document.getElementById('location');
-            locationField.value = `${position.coords.latitude}, ${position.coords.longitude}`;
-          },
-          error => {
-            alert('ไม่สามารถเข้าถึงตำแหน่งได้');
-          }
-        );
-      } else {
-        alert('เบราว์เซอร์ของคุณไม่รองรับการแชร์ตำแหน่ง');
-      }
-    });
-
-    // Handle form submission
+    // Submit form
     document.getElementById('dataForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const formData = new FormData(event.target);
 
       try {
-        let response = await fetch(scriptURL, {
+        const response = await fetch(scriptURL, {
           method: 'POST',
           body: formData
         });
-        let result = await response.json();
-        alert(result.message);
+        const result = await response.json();
+        alert(result.message || 'บันทึกข้อมูลสำเร็จ');
         event.target.reset();
       } catch (error) {
         console.error('Error submitting form:', error);
-        alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
+        alert('ไม่สามารถบันทึกข้อมูลได้');
       }
     });
+
+    loadOptions();
   </script>
 </body>
 </html>
