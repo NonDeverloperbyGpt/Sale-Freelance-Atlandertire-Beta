@@ -212,28 +212,36 @@
 </html>
 
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbxGpxKsjbLX3nebiR4lZQdwQt8qr_40HLFTgSryjL8nOgzxVHSF3n0JoOaU8TkKCqAa/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzvHHeiy6uK5gUaZjJ8MgxZa6_m2X0NZEMi5Rku4Is/dev';
 
-  // ดึงชื่อฝ่ายขายโดยอัตโนมัติ
-  document.getElementById('salesID').addEventListener('input', async (event) => {
+// ดึงชื่อฝ่ายขายเมื่อป้อน Sales ID
+document.getElementById('salesID').addEventListener('input', async (event) => {
   const salesID = event.target.value;
   if (salesID) {
     try {
-      const response = await fetch(`${API_URL}?action=getSalesName&salesID=${salesID}`, {
-        method: 'GET',
-      });
+      const response = await fetch(`${API_URL}?action=getSalesName&salesID=${salesID}`);
       const data = await response.json();
-      if (data.salesName) {
-        document.getElementById('salesName').value = data.salesName;
-      } else {
-        document.getElementById('salesName').value = 'ไม่พบข้อมูล';
-      }
+      document.getElementById('salesName').value = data.salesName || 'ไม่พบข้อมูล';
     } catch (error) {
-      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message);
+      alert('เกิดข้อผิดพลาด: ' + error.message);
     }
   }
 });
 
+// โหลดจังหวัดเมื่อโหลดหน้า
+window.onload = async () => {
+  try {
+    const response = await fetch(`${API_URL}?action=getRegions`);
+    const regions = await response.json();
 
-
-
+    const regionSelect = document.getElementById('region');
+    regions.forEach(([name, code]) => {
+      const option = document.createElement('option');
+      option.value = code;
+      option.textContent = name;
+      regionSelect.appendChild(option);
+    });
+  } catch (error) {
+    alert('ไม่สามารถโหลดจังหวัดได้: ' + error.message);
+  }
+};
