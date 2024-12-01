@@ -60,35 +60,15 @@
         <label for="storeName">ชื่อร้านค้า:</label>
         <input type="text" id="storeName" name="storeName" required>
       </div>
+      <!-- Location Sharing -->
+      <div class="form-group">
+        <label for="location">ตำแหน่งร้านค้า:</label>
+        <input type="text" id="location" name="location" readonly>
+        <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
+      </div>
       <div class="form-group">
         <button type="submit">บันทึกข้อมูล</button>
       </div>
-      <div class="form-group">
-  <label for="location">ตำแหน่งร้านค้า:</label>
-  <input type="text" id="location" name="location" readonly>
-  <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
-</div>
-<div class="form-group">
-  <label for="photo1">รูปหน้าร้าน:</label>
-  <input type="file" id="photo1" name="photo1" accept="image/*">
-</div>
-<div class="form-group">
-  <label for="photo2">รูปเซลและหน้าร้าน:</label>
-  <input type="file" id="photo2" name="photo2" accept="image/*">
-</div>
-<div class="form-group">
-  <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
-  <input type="text" id="phone" name="phone" required>
-</div>
-<div class="form-group">
-  <label for="contactName">ชื่อผู้ติดต่อ:</label>
-  <input type="text" id="contactName" name="contactName" required>
-</div>
-<div class="form-group">
-  <label for="contactPosition">ตำแหน่งงานผู้รับเรื่อง:</label>
-  <input type="text" id="contactPosition" name="contactPosition" required>
-</div>
-
     </form>
   </div>
 
@@ -125,6 +105,23 @@
         alert('ไม่สามารถโหลดข้อมูลได้');
       }
     }
+
+    // Handle location sharing
+    document.getElementById('shareLocation').addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const locationField = document.getElementById('location');
+            locationField.value = `${position.coords.latitude}, ${position.coords.longitude}`;
+          },
+          error => {
+            alert('ไม่สามารถเข้าถึงตำแหน่งได้');
+          }
+        );
+      } else {
+        alert('เบราว์เซอร์ของคุณไม่รองรับการแชร์ตำแหน่ง');
+      }
+    });
 
     // Submit form
     document.getElementById('dataForm').addEventListener('submit', async (event) => {
