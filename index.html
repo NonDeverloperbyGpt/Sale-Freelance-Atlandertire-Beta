@@ -92,32 +92,17 @@
         <input type="text" id="storeName" name="storeName" required>
       </div>
 
+      <!-- Location Sharing -->
+      <div class="form-group">
+        <label for="location">ตำแหน่งร้านค้า:</label>
+        <input type="text" id="location" name="location" readonly>
+        <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
+      </div>
+
       <!-- Contact Name -->
       <div class="form-group">
         <label for="contactName">ชื่อผู้ติดต่อ:</label>
         <input type="text" id="contactName" name="contactName" required>
-      </div>
-
-      <!-- Contact Position -->
-      <div class="form-group">
-        <label for="contactPosition">ตำแหน่งงานผู้รับเรื่อง:</label>
-        <input type="text" id="contactPosition" name="contactPosition" required>
-      </div>
-
-      <!-- Phone -->
-      <div class="form-group">
-        <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
-        <input type="text" id="phone" name="phone" required>
-      </div>
-
-      <!-- Photo Upload -->
-      <div class="form-group">
-        <label for="photo1">รูปหน้าร้าน:</label>
-        <input type="file" id="photo1" name="photo1" accept="image/*">
-      </div>
-      <div class="form-group">
-        <label for="photo2">รูปเซลและหน้าร้าน:</label>
-        <input type="file" id="photo2" name="photo2" accept="image/*">
       </div>
 
       <!-- Submit Button -->
@@ -128,13 +113,14 @@
   </div>
 
   <script>
+    // Fetch data from API
     window.addEventListener('load', async () => {
       const salesDropdown = document.getElementById('salesName');
       const regionDropdown = document.getElementById('region');
 
       try {
         // Fetch sales data
-        let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getSales');
+        let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbzrvrfjdMbJdkStPJ2f0c9NPuR9xLTCLdS2fU7RcPRVv25h98kg7PMx-FUswOwaAEmM/exec?action=getSales');
         let salesData = await salesResponse.json();
         salesData.forEach(sale => {
           let option = document.createElement('option');
@@ -144,7 +130,7 @@
         });
 
         // Fetch region data
-        let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getRegions');
+        let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbzrvrfjdMbJdkStPJ2f0c9NPuR9xLTCLdS2fU7RcPRVv25h98kg7PMx-FUswOwaAEmM/exec?action=getRegions');
         let regionData = await regionResponse.json();
         regionData.forEach(region => {
           let option = document.createElement('option');
@@ -158,13 +144,30 @@
       }
     });
 
+    // Handle location sharing
+    document.getElementById('shareLocation').addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const locationField = document.getElementById('location');
+            locationField.value = `${position.coords.latitude}, ${position.coords.longitude}`;
+          },
+          error => {
+            alert('ไม่สามารถเข้าถึงตำแหน่งได้');
+          }
+        );
+      } else {
+        alert('เบราว์เซอร์ของคุณไม่รองรับการแชร์ตำแหน่ง');
+      }
+    });
+
     // Handle form submission
     document.getElementById('dataForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const formData = new FormData(event.target);
 
       try {
-        let response = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=submitForm', {
+        let response = await fetch('https://script.google.com/macros/s/AKfycbzrvrfjdMbJdkStPJ2f0c9NPuR9xLTCLdS2fU7RcPRVv25h98kg7PMx-FUswOwaAEmM/exec?action=submitForm', {
           method: 'POST',
           body: JSON.stringify(Object.fromEntries(formData)),
           headers: { 'Content-Type': 'application/json' }
