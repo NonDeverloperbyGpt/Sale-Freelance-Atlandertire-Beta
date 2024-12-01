@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base target="_top">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -51,6 +50,44 @@
     .form-group button:hover {
       background-color: #218838;
     }
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .modal-content h2 {
+      margin: 0 0 20px;
+      color: #333;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -59,7 +96,7 @@
     <form id="dataForm">
       <div class="form-group">
         <label for="salesID">รหัสฝ่ายขาย Sales ID:</label>
-        <input type="number" id="salesID" name="salesID" required onblur="fetchSalesName()">
+        <input type="number" id="salesID" name="salesID" required>
       </div>
       <div class="form-group">
         <label for="salesName">ชื่อฝ่ายขาย:</label>
@@ -71,11 +108,13 @@
       </div>
       <div class="form-group">
         <label for="region">พื้นที่จังหวัด:</label>
-        <select id="region" name="region" required></select>
+        <select id="region" name="region" required>
+          <!-- Options will be added dynamically -->
+        </select>
       </div>
       <div class="form-group">
-        <label for="location">Location ตำแหน่งร้านค้า:</label>
-        <input type="text" id="location" name="location" placeholder="ปักหมุดตำแหน่ง" readonly>
+        <label for="location">ตำแหน่งร้านค้า:</label>
+        <input type="text" id="location" name="location" readonly>
         <button type="button" onclick="getLocation()">ปักหมุด</button>
       </div>
       <div class="form-group">
@@ -91,7 +130,7 @@
         <input type="text" id="phone" name="phone" required>
       </div>
       <div class="form-group">
-        <label for="contactName">ชื่อผู้ติดต่อ เจ้าหน้าที่ร้านค้า:</label>
+        <label for="contactName">ชื่อผู้ติดต่อ:</label>
         <input type="text" id="contactName" name="contactName">
       </div>
       <div class="form-group">
@@ -105,21 +144,12 @@
   <!-- Modal -->
   <div id="successModal" class="modal">
     <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
       <h2>บันทึกข้อมูลสำเร็จ!</h2>
+      <button onclick="closeModal()">ปิดหน้าต่าง</button>
     </div>
   </div>
 
   <script>
-    function fetchSalesName() {
-      const salesID = document.getElementById('salesID').value;
-      google.script.run
-        .withSuccessHandler(name => {
-          document.getElementById('salesName').value = name || "ไม่พบข้อมูล";
-        })
-        .getSalesName(salesID);
-    }
-
     function getLocation() {
       navigator.geolocation.getCurrentPosition((position) => {
         const coords = `${position.coords.latitude}, ${position.coords.longitude}`;
@@ -128,36 +158,15 @@
     }
 
     function submitForm() {
-      const form = document.getElementById("dataForm");
+      const form = document.getElementById('dataForm');
       const formData = new FormData(form);
 
-      const photos = ["photo1", "photo2"];
-      const photoUploads = photos.map((photo) => {
-        return formData.get(photo) ? uploadFile(formData.get(photo)) : Promise.resolve("");
-      });
-
-      Promise.all(photoUploads).then((photoUrls) => {
-        const formObject = Object.fromEntries(formData.entries());
-        formObject.photo1 = photoUrls[0];
-        formObject.photo2 = photoUrls[1];
-
-        google.script.run
-          .withSuccessHandler(() => {
-            openModal();
-            form.reset();
-          })
-          .submitData(formObject);
-      });
-    }
-
-    function uploadFile(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          resolve(event.target.result); // ส่ง Base64 ให้ฝั่ง Apps Script
-        };
-        reader.readAsDataURL(file);
-      });
+      google.script.run
+        .withSuccessHandler(() => {
+          openModal();
+          form.reset();
+        })
+        .submitData(Object.fromEntries(formData));
     }
 
     function openModal() {
@@ -169,14 +178,15 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Load regions from server or script
       google.script.run
-        .withSuccessHandler(options => {
+        .withSuccessHandler((regions) => {
           const regionSelect = document.getElementById('region');
-          options.forEach(option => {
-            const opt = document.createElement('option');
-            opt.value = option;
-            opt.textContent = option;
-            regionSelect.appendChild(opt);
+          regions.forEach((region) => {
+            const option = document.createElement('option');
+            option.value = region;
+            option.textContent = region;
+            regionSelect.appendChild(option);
           });
         })
         .getRegions();
