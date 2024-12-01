@@ -216,15 +216,24 @@
 
   // ดึงชื่อฝ่ายขายโดยอัตโนมัติ
   document.getElementById('salesID').addEventListener('input', async (event) => {
-    const salesID = event.target.value;
-    if (salesID) {
-      try {
-        const response = await fetch(`${API_URL}?action=getSalesName&salesID=${salesID}`);
-        const data = await response.json();
-        document.getElementById('salesName').value = data.salesName || 'ไม่พบข้อมูล'; // กรอกชื่อฝ่ายขายลงในฟิลด์
-      } catch (error) {
-        alert('เกิดข้อผิดพลาดในการดึงข้อมูล: ' + error.message);
+  const salesID = event.target.value;
+  if (salesID) {
+    try {
+      const response = await fetch(`${API_URL}?action=getSalesName&salesID=${salesID}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      if (data.salesName) {
+        document.getElementById('salesName').value = data.salesName;
+      } else {
+        document.getElementById('salesName').value = 'ไม่พบข้อมูล';
       }
+    } catch (error) {
+      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message);
     }
-  });
-</script>
+  }
+});
+
+
+
+
