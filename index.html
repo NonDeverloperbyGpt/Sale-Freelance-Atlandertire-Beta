@@ -193,8 +193,8 @@
     </form>
   </div>
 
-  <script>
-    // ฟังก์ชันสำหรับแชร์ตำแหน่ง
+  <script> // เริมตรงนี้ตัวเชื่อมโยง
+    // ฟังก์ชันสำหรับแชร์ตำแหน่ง 
     function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -210,3 +210,21 @@
   </script>
 </body>
 </html>
+
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzvHHeiy6uK5gUaZjJ8MgxZa6_m2X0NZEMi5Rku4Is/exec';
+
+  // ดึงชื่อฝ่ายขายโดยอัตโนมัติ
+  document.getElementById('salesID').addEventListener('input', async (event) => {
+    const salesID = event.target.value;
+    if (salesID) {
+      try {
+        const response = await fetch(`${API_URL}?action=getSalesName&salesID=${salesID}`);
+        const data = await response.json();
+        document.getElementById('salesName').value = data.salesName || 'ไม่พบข้อมูล'; // กรอกชื่อฝ่ายขายลงในฟิลด์
+      } catch (error) {
+        alert('เกิดข้อผิดพลาดในการดึงข้อมูล: ' + error.message);
+      }
+    }
+  });
+</script>
