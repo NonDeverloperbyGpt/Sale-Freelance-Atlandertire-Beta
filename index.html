@@ -1,49 +1,52 @@
-    document.addEventListener('DOMContentLoaded', async () => {
-      const salesDropdown = document.getElementById('salesName');
-      const regionDropdown = document.getElementById('region');
+window.addEventListener('load', async () => {
+  const salesDropdown = document.getElementById('salesName');
+  const regionDropdown = document.getElementById('region');
 
-      try {
-        // Fetch sales data
-        let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getSales');
-        let salesData = await salesResponse.json();
-        salesData.forEach(sale => {
-          let option = document.createElement('option');
-          option.value = sale[0];
-          option.textContent = sale[1];
-          salesDropdown.appendChild(option);
-        });
-
-        // Fetch region data
-        let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getRegions');
-        let regionData = await regionResponse.json();
-        regionData.forEach(region => {
-          let option = document.createElement('option');
-          option.value = region[0];
-          option.textContent = region[1];
-          regionDropdown.appendChild(option);
-        });
-      } catch (error) {
-        console.error('Error loading options:', error);
-      }
+  try {
+    // Fetch sales data
+    let salesResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getSales');
+    let salesData = await salesResponse.json();
+    salesData.forEach(sale => {
+      let option = document.createElement('option');
+      option.value = sale[0];
+      option.textContent = sale[1];
+      salesDropdown.appendChild(option);
     });
 
-    // Handle form submission
-    document.getElementById('dataForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.target);
-
-      try {
-        let response = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=submitForm', {
-          method: 'POST',
-          body: JSON.stringify(Object.fromEntries(formData)),
-          headers: { 'Content-Type': 'application/json' }
-        });
-
-        let result = await response.json();
-        alert(result.message);
-        event.target.reset();
-      } catch (error) {
-        console.error('Error submitting form:', error);
-        alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
-      }
+    // Fetch region data
+    let regionResponse = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=getRegions');
+    let regionData = await regionResponse.json();
+    regionData.forEach(region => {
+      let option = document.createElement('option');
+      option.value = region[0];
+      option.textContent = region[1];
+      regionDropdown.appendChild(option);
     });
+  } catch (error) {
+    console.error('Error loading options:', error);
+  }
+});
+
+// Handle form submission
+const formElement = document.getElementById('dataForm');
+if (formElement) {
+  formElement.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    try {
+      let response = await fetch('https://script.google.com/macros/s/AKfycbyvJEFLZ5Bti0HO0E3-iuf1lwMI1vplVC9D4PhPpHNyrO47EMifbcIWXHbh9YATH_oe/exec?action=submitForm', {
+        method: 'POST',
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      let result = await response.json();
+      alert(result.message);
+      event.target.reset();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
+    }
+  });
+}
