@@ -51,67 +51,6 @@
     .form-group button:hover {
       background-color: #218838;
     }
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-    .modal-content {
-      background-color: #fff;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-      max-width: 400px;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .modal-content h2 {
-      margin: 0;
-      color: #333;
-    }
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    <style>
-  .form-group button {
-      background-color: #28a745;
-      color: white;
-      padding: 20px; /* ขนาดปุ่มใหญ่ขึ้น */
-      border: none;
-      border-radius: 8px; /* ขอบโค้งมน */
-      font-size: 22px; /* ขนาดตัวอักษรใหญ่ขึ้น */
-      cursor: pointer;
-      width: 100%; /* ให้ปุ่มเต็มความกว้าง */
-      max-width: 400px; /* จำกัดขนาดปุ่มสูงสุด */
-      margin: 20px auto; /* จัดกึ่งกลาง */
-      display: block; /* บล็อกปุ่ม */
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* เพิ่มเงา */
-      transition: background-color 0.3s ease; /* เพิ่มเอฟเฟกต์เมื่อ hover */
-  }
-
-  .form-group button:hover {
-      background-color: #218838;
-      transform: scale(1.05); /* เพิ่มการขยายเล็กน้อยเมื่อ hover */
-  }
-</style>
-
   </style>
 </head>
 <body>
@@ -139,22 +78,14 @@
         <input type="text" id="location" name="location" placeholder="ปักหมุดตำแหน่ง" readonly>
         <button type="button" onclick="getLocation()">ปักหมุด</button>
       </div>
-     <div class="form-group">
-  <label for="photo1">รูปหน้าร้าน:</label>
-  <input type="file" id="photo1" name="photo1" accept="image/*">
-</div>
-<div class="form-group">
-  <label for="photo2">รูปเซลและหน้าร้าน:</label>
-  <input type="file" id="photo2" name="photo2" accept="image/*">
-</div>
-<div class="form-group">
-  <label for="photo3">Photo 3:</label>
-  <input type="file" id="photo3" name="photo3" accept="image/*">
-</div>
-<div class="form-group">
-  <label for="photo4">Photo 4:</label>
-  <input type="file" id="photo4" name="photo4" accept="image/*">
-</div>
+      <div class="form-group">
+        <label for="photo1">รูปหน้าร้าน:</label>
+        <input type="file" id="photo1" name="photo1" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label for="photo2">รูปเซลและหน้าร้าน:</label>
+        <input type="file" id="photo2" name="photo2" accept="image/*">
+      </div>
       <div class="form-group">
         <label for="phone">เบอร์โทรศัพท์ร้านค้า:</label>
         <input type="text" id="phone" name="phone" required>
@@ -168,29 +99,6 @@
         <input type="text" id="contactPosition" name="contactPosition">
       </div>
       <button type="button" onclick="submitForm()">บันทึกข้อมูล</button>
-      <style>
-  .form-group button { // ขนาดปุ่มปักหมุด เริ่มตรงนี้
-      background-color: #28a745;
-      color: white;
-      padding: 20px; /* ขนาดปุ่มใหญ่ขึ้น */
-      border: none;
-      border-radius: 8px; /* ขอบโค้งมน */
-      font-size: 22px; /* ขนาดตัวอักษรใหญ่ขึ้น */
-      cursor: pointer;
-      width: 100%; /* ให้ปุ่มเต็มความกว้าง */
-      max-width: 400px; /* จำกัดขนาดปุ่มสูงสุด */
-      margin: 20px auto; /* จัดกึ่งกลาง */
-      display: block; /* บล็อกปุ่ม */
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* เพิ่มเงา */
-      transition: background-color 0.3s ease; /* เพิ่มเอฟเฟกต์เมื่อ hover */
-  }
-
-  .form-group button:hover {
-      background-color: #218838;
-      transform: scale(1.05); /* เพิ่มการขยายเล็กน้อยเมื่อ hover */
-  }
-</style> /* ใส่ข้อมูลให้ครบถ้วน หลังจากกดบันทึกข้อมูล รอ 2-3 วิ */
-
     </form>
   </div>
 
@@ -223,7 +131,7 @@
       const form = document.getElementById("dataForm");
       const formData = new FormData(form);
 
-      const photos = ["photo1", "photo2", "photo3", "photo4"];
+      const photos = ["photo1", "photo2"];
       const photoUploads = photos.map((photo) => {
         return formData.get(photo) ? uploadFile(formData.get(photo)) : Promise.resolve("");
       });
@@ -232,8 +140,6 @@
         const formObject = Object.fromEntries(formData.entries());
         formObject.photo1 = photoUrls[0];
         formObject.photo2 = photoUrls[1];
-        formObject.photo3 = photoUrls[2];
-        formObject.photo4 = photoUrls[3];
 
         google.script.run
           .withSuccessHandler(() => {
@@ -276,50 +182,5 @@
         .getRegions();
     });
   </script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>แบบฟอร์มการบันทึกข้อมูล</title>
-  <script>
-    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb.../exec"; // แปะ URL จาก Apps Script ที่ได้มา
-
-    function submitForm() {
-      const formData = new FormData(document.getElementById("dataForm"));
-      const jsonData = {};
-      formData.forEach((value, key) => (jsonData[key] = value));
-
-      // ส่งข้อมูลไปยัง Apps Script
-      fetch(GOOGLE_APPS_SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify(jsonData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          alert(data.message || "บันทึกข้อมูลสำเร็จ");
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
-        });
-    }
-  </script>
-</head>
-<body>
-  <h2>แบบฟอร์มการบันทึกข้อมูล</h2>
-  <form id="dataForm">
-    <label>ชื่อฝ่ายขาย:</label>
-    <input type="text" name="salesName" required />
-    <label>ชื่อร้านค้า:</label>
-    <input type="text" name="storeName" required />
-    <label>รูปภาพ:</label>
-    <input type="file" name="photo1" accept="image/*" />
-    <button type="button" onclick="submitForm()">บันทึกข้อมูล</button>
-  </form>
 </body>
 </html>
