@@ -59,37 +59,6 @@
     .form-group button:hover {
       background: #0056b3;
     }
-
-    /* Responsive Design for Tablets and Mobile */
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px;
-      }
-
-      h2 {
-        font-size: 1.6em;
-      }
-
-      .form-group input, .form-group select, .form-group button {
-        font-size: 0.9em;
-        padding: 10px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 10px;
-      }
-
-      h2 {
-        font-size: 1.4em;
-      }
-
-      .form-group input, .form-group select, .form-group button {
-        font-size: 0.8em;
-        padding: 8px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -115,11 +84,11 @@
       </div>
       <div class="form-group">
         <label for="photo1">ภาพฝ่ายขายและร้านค้า:</label>
-        <input type="file" id="photo1" name="photo1" accept="image/*">
+        <input type="file" id="photo1" name="photo1" accept="image/*" required>
       </div>
       <div class="form-group">
         <label for="photo2">ภาพหน้าร้าน:</label>
-        <input type="file" id="photo2" name="photo2" accept="image/*">
+        <input type="file" id="photo2" name="photo2" accept="image/*" required>
       </div>
       <div class="form-group">
         <label for="phone">เบอร์โทร:</label>
@@ -140,15 +109,17 @@
   </div>
 
   <script>
-    // ลิงก์ URL ของไฟล์ JSON จาก GitHub
     const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/sales.json';
     const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/regions.json';
 
-    // โหลดข้อมูลจากไฟล์ JSON
     async function loadOptions() {
       try {
         const salesResponse = await fetch(salesURL);
         const regionsResponse = await fetch(regionsURL);
+
+        if (!salesResponse.ok || !regionsResponse.ok) {
+          throw new Error('ไม่สามารถโหลดข้อมูลได้');
+        }
 
         const salesData = await salesResponse.json();
         const regionsData = await regionsResponse.json();
@@ -156,7 +127,6 @@
         const salesSelect = document.getElementById('salesName');
         const regionSelect = document.getElementById('region');
 
-        // เติมข้อมูลให้กับตัวเลือก SalesName
         salesData.forEach(({ SalesID, SalesName }) => {
           const option = document.createElement('option');
           option.value = SalesID;
@@ -164,7 +134,6 @@
           salesSelect.appendChild(option);
         });
 
-        // เติมข้อมูลให้กับตัวเลือก Region
         regionsData.forEach(({ name, code }) => {
           const option = document.createElement('option');
           option.value = code;
@@ -172,18 +141,16 @@
           regionSelect.appendChild(option);
         });
       } catch (error) {
-        console.error('Error loading options:', error);
-        alert('ไม่สามารถโหลดข้อมูลได้');
+        console.error(error);
+        alert(error.message);
       }
     }
 
-    // ฟังก์ชันเพื่อส่งข้อมูลไปยัง GitHub
     async function submitForm(event) {
       event.preventDefault();
 
       const formData = new FormData(event.target);
 
-      // สร้างอ็อบเจ็กต์ข้อมูลที่จะบันทึก
       const data = {
         salesName: formData.get('salesName'),
         storeName: formData.get('storeName'),
@@ -192,45 +159,42 @@
         phone: formData.get('phone'),
         contactName: formData.get('contactName'),
         contactPosition: formData.get('contactPosition'),
+        photo1: await convertToBase64(formData.get('photo1')),
+        photo2: await convertToBase64(formData.get('photo2'))
       };
 
-      // แปลงข้อมูลเป็น Base64
-      const photo1Base64 = await convertToBase64(formData.get('photo1'));
-      const photo2Base64 = await convertToBase64(formData.get('photo2'));
-
-      data.photo1 = photo1Base64;
-      data.photo2 = photo2Base64;
-
-      // ส่งข้อมูลไปยัง GitHub ผ่าน API
       try {
         const response = await fetch('https://api.github.com/repos/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/contents/data.json', {
           method: 'PUT',
           headers: {
-            'Authorization': 'Bearer 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',
+            'Authorization': 'Bearer <YOUR_GITHUB_TOKEN>',
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             message: 'บันทึกข้อมูลฟอร์ม',
-            content: btoa(JSON.stringify(data)),  // แปลงข้อมูลเป็น Base64
+            content: btoa(JSON.stringify(data)),
             branch: 'main'
           })
         });
 
-        const result = await response.json();
         if (response.ok) {
           alert('บันทึกข้อมูลสำเร็จ');
         } else {
-          alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+          const result = await response.json();
+          alert(`เกิดข้อผิดพลาด: ${result.message}`);
         }
       } catch (error) {
-        console.error('Error submitting data:', error);
+        console.error(error);
         alert('ไม่สามารถส่งข้อมูลได้');
       }
     }
 
-    // ฟังก์ชันแปลงไฟล์เป็น Base64
     function convertToBase64(file) {
       return new Promise((resolve, reject) => {
+        if (!file) {
+          resolve(null);
+          return;
+        }
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result.split(',')[1]);
         reader.onerror = reject;
@@ -238,15 +202,11 @@
       });
     }
 
-    // ฟังก์ชันแชร์ตำแหน่ง
     function shareLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          const locationInput = document.getElementById('location');
-          locationInput.value = `Latitude: ${latitude}, Longitude: ${longitude}`;
-        }, function(error) {
+        navigator.geolocation.getCurrentPosition(position => {
+          document.getElementById('location').value = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`;
+        }, error => {
           alert('ไม่สามารถเข้าถึงตำแหน่งของคุณได้');
         });
       } else {
@@ -254,14 +214,10 @@
       }
     }
 
-    // เรียกใช้ฟังก์ชั่น loadOptions เมื่อโหลดเพจ
-    loadOptions();
-
-    // ตั้งค่าให้ฟอร์มส่งข้อมูลเมื่อกดปุ่ม
     document.getElementById('dataForm').addEventListener('submit', submitForm);
-
-    // ตั้งค่าให้ปุ่มแชร์ตำแหน่งทำงาน
     document.getElementById('shareLocation').addEventListener('click', shareLocation);
+
+    loadOptions();
   </script>
 </body>
 </html>
