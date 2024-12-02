@@ -141,8 +141,8 @@
 
   <script>
     // ลิงก์ URL ของไฟล์ JSON จาก GitHub
-    const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/refs/heads/main/sales.json';
-    const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/refs/heads/main/regions.json';
+    const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/sales.json';
+    const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/regions.json';
 
     // โหลดข้อมูลจากไฟล์ JSON
     async function loadOptions() {
@@ -177,7 +177,7 @@
       }
     }
 
-    // ฟังก์ชันเพื่อส่งข้อมูล
+    // ฟังก์ชันเพื่อส่งข้อมูลไปยัง GitHub
     async function submitForm(event) {
       event.preventDefault();
 
@@ -189,26 +189,36 @@
         storeName: formData.get('storeName'),
         region: formData.get('region'),
         location: formData.get('location'),
-        photo1: formData.get('photo1'),
-        photo2: formData.get('photo2'),
         phone: formData.get('phone'),
         contactName: formData.get('contactName'),
-        contactPosition: formData.get('contactPosition')
+        contactPosition: formData.get('contactPosition'),
       };
 
-      // ส่งข้อมูลไปยัง Google Apps Script หรือ API ของคุณ
+      // แปลงข้อมูลเป็น Base64
+      const photo1Base64 = await convertToBase64(formData.get('photo1'));
+      const photo2Base64 = await convertToBase64(formData.get('photo2'));
+
+      data.photo1 = photo1Base64;
+      data.photo2 = photo2Base64;
+
+      // ส่งข้อมูลไปยัง GitHub ผ่าน API
       try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbyaGI56rITMGoKTUYPK7-bHaRoNEqB3BXuQAsGrYRn6cwdaEgKPvWqsYv24f-36ey35/exec', {
-          method: 'POST',
-          body: JSON.stringify(data),
+        const response = await fetch('https://api.github.com/repos/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/contents/data.json', {
+          method: 'PUT',
           headers: {
+            'Authorization': 'Bearer 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',
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({
+            message: 'บันทึกข้อมูลฟอร์ม',
+            content: btoa(JSON.stringify(data)),  // แปลงข้อมูลเป็น Base64
+            branch: 'main'
+          })
         });
 
         const result = await response.json();
-        if (result.success) {
-          alert('บันทึกข้อมูลสำเร็จ!');
+        if (response.ok) {
+          alert('บันทึกข้อมูลสำเร็จ');
         } else {
           alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
         }
@@ -216,6 +226,16 @@
         console.error('Error submitting data:', error);
         alert('ไม่สามารถส่งข้อมูลได้');
       }
+    }
+
+    // ฟังก์ชันแปลงไฟล์เป็น Base64
+    function convertToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
 
     // ฟังก์ชันแชร์ตำแหน่ง
