@@ -180,8 +180,18 @@
         location: formData.get('location'),
       };
 
-      console.log('ส่งข้อมูล:', data); // ทดสอบใน Console
-      alert('ข้อมูลถูกส่งสำเร็จ! (โปรดดูใน Console)');
+      try {
+        // จำลองการบันทึกข้อมูล
+        const success = true; // เปลี่ยนเป็น false เพื่อทดสอบกรณีผิดพลาด
+        if (success) {
+          alert('บันทึกข้อมูลสำเร็จ');
+          window.location.reload(); // รีเฟรชหน้าใหม่
+        } else {
+          throw new Error('ส่งข้อมูลไม่สำเร็จ');
+        }
+      } catch (error) {
+        alert('ส่งข้อมูลไม่สำเร็จ: ' + error.message);
+      }
     }
 
     document.addEventListener('DOMContentLoaded', loadOptions);
