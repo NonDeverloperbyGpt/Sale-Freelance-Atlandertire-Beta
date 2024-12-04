@@ -97,6 +97,11 @@
         <input type="text" id="contactPosition" name="contactPosition" required>
       </div>
       <div class="form-group">
+        <label for="location">ตำแหน่งปัจจุบัน:</label>
+        <input type="text" id="location" name="location" readonly>
+        <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
+      </div>
+      <div class="form-group">
         <button type="submit">บันทึกข้อมูล</button>
       </div>
     </form>
@@ -140,6 +145,23 @@
       }
     }
 
+    function shareLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            document.getElementById('location').value = `Latitude: ${latitude}, Longitude: ${longitude}`;
+          },
+          (error) => {
+            alert('ไม่สามารถดึงตำแหน่งได้: ' + error.message);
+          }
+        );
+      } else {
+        alert('เบราว์เซอร์ของคุณไม่รองรับการใช้งาน Geolocation');
+      }
+    }
+
     async function submitForm(event) {
       event.preventDefault();
 
@@ -150,6 +172,7 @@
         phone: formData.get('phone'),
         contactName: formData.get('contactName'),
         contactPosition: formData.get('contactPosition'),
+        location: formData.get('location'),
       };
 
       console.log('ส่งข้อมูล:', data); // ทดสอบใน Console
@@ -158,6 +181,7 @@
 
     document.addEventListener('DOMContentLoaded', loadOptions);
     document.getElementById('dataForm').addEventListener('submit', submitForm);
+    document.getElementById('shareLocation').addEventListener('click', shareLocation);
   </script>
 </body>
 </html>
