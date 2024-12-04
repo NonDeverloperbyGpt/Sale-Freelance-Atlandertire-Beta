@@ -38,7 +38,7 @@
       font-size: 1em;
     }
 
-    .form-group input, .form-group select, .form-group button {
+    .form-group input, .form-group button {
       width: 100%;
       padding: 12px;
       font-size: 1em;
@@ -98,9 +98,9 @@
     const scriptURL = 'https://script.google.com/macros/s/AKfycby7fzz6nuOg_zo4RxLjwMuaUG4NJroLDz16XxaydCDoApyZq0AkHBMYU_RYJzqwKvtw/exec';
 
     document.getElementById('dataForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
+      event.preventDefault(); // ป้องกันการรีเฟรชหน้าเมื่อกด submit
 
-      const formData = new FormData(event.target);
+      const formData = new FormData(event.target); // เก็บข้อมูลจากฟอร์ม
 
       const data = {
         salesName: formData.get('salesName'),
@@ -112,6 +112,7 @@
       };
 
       try {
+        // ส่งข้อมูลไปยัง Google Apps Script Web App
         const response = await fetch(scriptURL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -120,13 +121,15 @@
 
         if (response.ok) {
           alert('บันทึกข้อมูลสำเร็จ');
-          event.target.reset(); // ล้างฟอร์มหลังบันทึกสำเร็จ
+          event.target.reset(); // ล้างข้อมูลในฟอร์ม
         } else {
-          alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+          const errorDetails = await response.json();
+          console.error('Error response:', errorDetails);
+          alert(`เกิดข้อผิดพลาด: ${errorDetails.error || 'ไม่ทราบข้อผิดพลาด'}`);
         }
       } catch (error) {
-        console.error('Error:', error);
-        alert('ไม่สามารถส่งข้อมูลได้');
+        console.error('Fetch error:', error);
+        alert('ไม่สามารถส่งข้อมูลได้: ' + error.message);
       }
     });
   </script>
