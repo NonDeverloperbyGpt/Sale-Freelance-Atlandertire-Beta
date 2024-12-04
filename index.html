@@ -77,6 +77,10 @@
         </select>
       </div>
       <div class="form-group">
+        <label for="storeName">ชื่อร้านค้า:</label>
+        <input type="text" id="storeName" name="storeName" required>
+      </div>
+      <div class="form-group">
         <label for="photo1">ภาพฝ่ายขายและร้านค้า:</label>
         <input type="file" id="photo1" name="photo1" accept="image/*" required>
       </div>
@@ -169,6 +173,7 @@
       const data = {
         salesName: formData.get('salesName'),
         region: formData.get('region'),
+        storeName: formData.get('storeName'),
         phone: formData.get('phone'),
         contactName: formData.get('contactName'),
         contactPosition: formData.get('contactPosition'),
