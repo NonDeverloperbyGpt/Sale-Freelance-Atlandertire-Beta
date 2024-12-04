@@ -3,32 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>บันทึกข้อมูลใน Firestore</title>
+  <title>แบบฟอร์มบันทึกข้อมูล</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1em;
+    }
+
+    .form-group input, .form-group select, .form-group button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      margin: 5px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .form-group button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1em;
+    }
+
+    .form-group button:hover {
+      background: #0056b3;
+    }
+  </style>
   <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
 </head>
 <body>
-  <h1>แบบฟอร์มบันทึกข้อมูล</h1>
-  <form id="dataForm">
-    <label for="salesName">ชื่อฝ่ายขาย:</label>
-    <input type="text" id="salesName" name="salesName" required>
-    <br><br>
-    <label for="region">จังหวัด:</label>
-    <input type="text" id="region" name="region" required>
-    <br><br>
-    <label for="storeName">ชื่อร้านค้า:</label>
-    <input type="text" id="storeName" name="storeName" required>
-    <br><br>
-    <button type="submit">บันทึกข้อมูล</button>
-  </form>
+  <div class="container">
+    <h2>แบบฟอร์มบันทึกข้อมูล</h2>
+    <form id="dataForm">
+      <div class="form-group">
+        <label for="salesName">ชื่อฝ่ายขาย:</label>
+        <select id="salesName" name="salesName" required>
+          <option value="">กรุณาเลือกชื่อฝ่ายขาย</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="region">จังหวัด:</label>
+        <select id="region" name="region" required>
+          <option value="">กรุณาเลือกจังหวัด</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="storeName">ชื่อร้านค้า:</label>
+        <input type="text" id="storeName" name="storeName" required>
+      </div>
+      <div class="form-group">
+        <label for="photo1">ภาพฝ่ายขายและร้านค้า:</label>
+        <input type="file" id="photo1" name="photo1" accept="image/*" required>
+      </div>
+      <div class="form-group">
+        <label for="photo2">ภาพหน้าร้าน:</label>
+        <input type="file" id="photo2" name="photo2" accept="image/*" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">เบอร์โทร:</label>
+        <input type="tel" id="phone" name="phone" required>
+      </div>
+      <div class="form-group">
+        <label for="contactName">ชื่อผู้ติดต่อ:</label>
+        <input type="text" id="contactName" name="contactName" required>
+      </div>
+      <div class="form-group">
+        <label for="contactPosition">ตำแหน่งผู้ติดต่อ:</label>
+        <input type="text" id="contactPosition" name="contactPosition" required>
+      </div>
+      <div class="form-group">
+        <label for="location">ตำแหน่งปัจจุบัน:</label>
+        <input type="text" id="location" name="location" readonly>
+        <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
+      </div>
+      <div class="form-group">
+        <button type="submit">บันทึกข้อมูล</button>
+      </div>
+    </form>
+  </div>
 
   <script>
+    const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/sales.json';
+    const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/regions.json';
+
     // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCYVsCK_DFALuZBPt9q_2mB_eOQHJRi6E8",
       authDomain: "sale-freelane-github-data.firebaseapp.com",
       projectId: "sale-freelane-github-data",
-      storageBucket: "sale-freelane-github-data.firebasestorage.app",
+      storageBucket: "sale-freelane-github-data.appspot.com",
       messagingSenderId: "573539356014",
       appId: "1:573539356014:web:043396e1cd29eaace3857f",
       measurementId: "G-939J3TSBLM"
@@ -38,27 +132,83 @@
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Form submission
-    document.getElementById('dataForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    async function loadOptions() {
+      try {
+        const salesResponse = await fetch(salesURL);
+        const regionsResponse = await fetch(regionsURL);
 
-      const salesName = document.getElementById('salesName').value;
-      const region = document.getElementById('region').value;
-      const storeName = document.getElementById('storeName').value;
+        if (!salesResponse.ok || !regionsResponse.ok) {
+          throw new Error('ไม่สามารถโหลดข้อมูลได้');
+        }
+
+        const salesData = await salesResponse.json();
+        const regionsData = await regionsResponse.json();
+
+        const salesSelect = document.getElementById('salesName');
+        const regionSelect = document.getElementById('region');
+
+        salesData.forEach(({ SalesID, SalesName }) => {
+          const option = document.createElement('option');
+          option.value = SalesID;
+          option.textContent = SalesName;
+          salesSelect.appendChild(option);
+        });
+
+        regionsData.forEach(({ name, code }) => {
+          const option = document.createElement('option');
+          option.value = code;
+          option.textContent = name;
+          regionSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading options:', error);
+        alert('ไม่สามารถโหลดข้อมูลได้');
+      }
+    }
+
+    function shareLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            document.getElementById('location').value = `Latitude: ${latitude}, Longitude: ${longitude}`;
+          },
+          (error) => {
+            alert('ไม่สามารถดึงตำแหน่งได้: ' + error.message);
+          }
+        );
+      } else {
+        alert('เบราว์เซอร์ของคุณไม่รองรับการใช้งาน Geolocation');
+      }
+    }
+
+    async function submitForm(event) {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const data = {
+        salesName: formData.get('salesName'),
+        region: formData.get('region'),
+        storeName: formData.get('storeName'),
+        phone: formData.get('phone'),
+        contactName: formData.get('contactName'),
+        contactPosition: formData.get('contactPosition'),
+        location: formData.get('location'),
+      };
 
       try {
-        await db.collection('salesData').add({
-          salesName,
-          region,
-          storeName
-        });
-        alert('บันทึกข้อมูลสำเร็จ!');
-        document.getElementById('dataForm').reset();
+        await db.collection('salesData').add(data);
+        alert('บันทึกข้อมูลสำเร็จ');
+        window.location.reload();
       } catch (error) {
-        console.error('Error writing document: ', error);
-        alert('เกิดข้อผิดพลาด: ' + error.message);
+        alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message);
       }
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadOptions);
+    document.getElementById('dataForm').addEventListener('submit', submitForm);
+    document.getElementById('shareLocation').addEventListener('click', shareLocation);
   </script>
 </body>
 </html>
