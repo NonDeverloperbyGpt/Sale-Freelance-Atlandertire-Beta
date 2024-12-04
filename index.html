@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://nondeverloperbygpt.github.io https://script.google.com; object-src 'none'; style-src 'self';">
   <title>แบบฟอร์มบันทึกข้อมูล</title>
-  <style>
+  <!-- เพิ่ม Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://nondeverloperbygpt.github.io https://script.google.com; style-src 'self' 'nonce-abcdef123'; object-src 'none';">
+  <style nonce="abcdef123">
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -120,62 +121,8 @@
     </form>
   </div>
 
-  <script>
+  <script nonce="abcdef123">
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwAGV-YABChgU_yUzbPtmc3P8mryZ6hzuotHN9xIDfmQDzspwg9xAPXS39I5a0GQ5hC/exec';
-
-    const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/sales.json';
-    const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/regions.json';
-
-    async function loadOptions() {
-      try {
-        const salesResponse = await fetch(salesURL);
-        const regionsResponse = await fetch(regionsURL);
-
-        if (!salesResponse.ok || !regionsResponse.ok) {
-          throw new Error('ไม่สามารถโหลดข้อมูลได้');
-        }
-
-        const salesData = await salesResponse.json();
-        const regionsData = await regionsResponse.json();
-
-        const salesSelect = document.getElementById('salesName');
-        const regionSelect = document.getElementById('region');
-
-        salesData.forEach(({ SalesID, SalesName }) => {
-          const option = document.createElement('option');
-          option.value = SalesID;
-          option.textContent = SalesName;
-          salesSelect.appendChild(option);
-        });
-
-        regionsData.forEach(({ name, code }) => {
-          const option = document.createElement('option');
-          option.value = code;
-          option.textContent = name;
-          regionSelect.appendChild(option);
-        });
-      } catch (error) {
-        console.error('Error loading options:', error);
-        alert('ไม่สามารถโหลดข้อมูลได้');
-      }
-    }
-
-    function shareLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            document.getElementById('location').value = `Latitude: ${latitude}, Longitude: ${longitude}`;
-          },
-          (error) => {
-            alert('ไม่สามารถดึงตำแหน่งได้: ' + error.message);
-          }
-        );
-      } else {
-        alert('เบราว์เซอร์ของคุณไม่รองรับการใช้งาน Geolocation');
-      }
-    }
 
     async function submitForm(event) {
       event.preventDefault();
@@ -210,9 +157,7 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadOptions);
     document.getElementById('dataForm').addEventListener('submit', submitForm);
-    document.getElementById('shareLocation').addEventListener('click', shareLocation);
   </script>
 </body>
 </html>
