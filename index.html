@@ -112,6 +112,8 @@
   </div>
 
   <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxRVQxcK2TIWvUfDG2zwFwA0zidGDtVvuuxnq5ge8Ptwe6zK5M2jvcLON7n1DUjprFT/exec';
+
     const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/sales.json';
     const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/regions.json';
 
@@ -181,13 +183,18 @@
       };
 
       try {
-        // จำลองการบันทึกข้อมูล
-        const success = true; // เปลี่ยนเป็น false เพื่อทดสอบกรณีผิดพลาด
-        if (success) {
+        const response = await fetch(scriptURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
           alert('บันทึกข้อมูลสำเร็จ');
-          window.location.reload(); // รีเฟรชหน้าใหม่
+          window.location.reload();
         } else {
-          throw new Error('ส่งข้อมูลไม่สำเร็จ');
+          const error = await response.text();
+          alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error);
         }
       } catch (error) {
         alert('ส่งข้อมูลไม่สำเร็จ: ' + error.message);
