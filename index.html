@@ -81,14 +81,6 @@
         <input type="text" id="storeName" name="storeName" required>
       </div>
       <div class="form-group">
-        <label for="photo1">ภาพฝ่ายขายและร้านค้า:</label>
-        <input type="file" id="photo1" name="photo1" accept="image/*" required>
-      </div>
-      <div class="form-group">
-        <label for="photo2">ภาพหน้าร้าน:</label>
-        <input type="file" id="photo2" name="photo2" accept="image/*" required>
-      </div>
-      <div class="form-group">
         <label for="phone">เบอร์โทร:</label>
         <input type="tel" id="phone" name="phone" required>
       </div>
@@ -149,54 +141,7 @@
       }
     }
 
-    function shareLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            document.getElementById('location').value = `Latitude: ${latitude}, Longitude: ${longitude}`;
-          },
-          (error) => {
-            alert('ไม่สามารถดึงตำแหน่งได้: ' + error.message);
-          }
-        );
-      } else {
-        alert('เบราว์เซอร์ของคุณไม่รองรับการใช้งาน Geolocation');
-      }
-    }
-
-    async function submitForm(event) {
-      event.preventDefault();
-
-      const formData = new FormData(event.target);
-      const data = {
-        salesName: formData.get('salesName'),
-        region: formData.get('region'),
-        storeName: formData.get('storeName'),
-        phone: formData.get('phone'),
-        contactName: formData.get('contactName'),
-        contactPosition: formData.get('contactPosition'),
-        location: formData.get('location'),
-      };
-
-      try {
-        // จำลองการบันทึกข้อมูล
-        const success = true; // เปลี่ยนเป็น false เพื่อทดสอบกรณีผิดพลาด
-        if (success) {
-          alert('บันทึกข้อมูลสำเร็จ');
-          window.location.reload(); // รีเฟรชหน้าใหม่
-        } else {
-          throw new Error('ส่งข้อมูลไม่สำเร็จ');
-        }
-      } catch (error) {
-        alert('ส่งข้อมูลไม่สำเร็จ: ' + error.message);
-      }
-    }
-
     document.addEventListener('DOMContentLoaded', loadOptions);
-    document.getElementById('dataForm').addEventListener('submit', submitForm);
-    document.getElementById('shareLocation').addEventListener('click', shareLocation);
   </script>
 </body>
 </html>
