@@ -61,21 +61,21 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>แบบฟอร์มบันทึกข้อมูล</h2>
-    <form id="dataForm">
-      <div class="form-group">
-        <label for="salesName">ชื่อฝ่ายขาย:</label>
-        <input type="text" id="salesName" name="salesName" required>
-      </div>
+  <div class="form-group">
+  <label for="salesName">ชื่อฝ่ายขาย:</label>
+  <select id="salesName" name="salesName" required>
+    <option value="">กรุณาเลือกชื่อฝ่ายขาย</option>
+  </select>
+</div>
       <div class="form-group">
         <label for="storeName">ชื่อร้านค้า:</label>
         <input type="text" id="storeName" name="storeName" required>
-      </div>
       <div class="form-group">
-        <label for="region">จังหวัด:</label>
-        <input type="text" id="region" name="region" required>
-      </div>
+  <label for="region">จังหวัด:</label>
+  <select id="region" name="region" required>
+    <option value="">กรุณาเลือกจังหวัด</option>
+  </select>
+</div>
       <div class="form-group">
         <label for="phone">เบอร์โทร:</label>
         <input type="tel" id="phone" name="phone" required>
@@ -158,3 +158,8 @@
   </script>
 </body>
 </html>
+
+
+
+
+
