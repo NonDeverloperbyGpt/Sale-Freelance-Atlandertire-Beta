@@ -59,6 +59,7 @@
       background: #0056b3;
     }
   </style>
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
 </head>
@@ -114,9 +115,6 @@
   </div>
 
   <script>
-    const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/sales.json';
-    const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/regions.json';
-
     // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCYVsCK_DFALuZBPt9q_2mB_eOQHJRi6E8",
@@ -131,6 +129,9 @@
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+
+    const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/sales.json';
+    const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/regions.json';
 
     async function loadOptions() {
       try {
