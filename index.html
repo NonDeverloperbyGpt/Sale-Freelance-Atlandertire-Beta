@@ -77,21 +77,58 @@
         </select>
       </div>
       <div class="form-group">
+        <label for="storeName">ชื่อร้านค้า:</label>
+        <input type="text" id="storeName" name="storeName" required>
+      </div>
+      <div class="form-group">
+        <label for="photo1">ภาพฝ่ายขายและร้านค้า:</label>
+        <input type="file" id="photo1" name="photo1" accept="image/*" required>
+      </div>
+      <div class="form-group">
+        <label for="photo2">ภาพหน้าร้าน:</label>
+        <input type="file" id="photo2" name="photo2" accept="image/*" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">เบอร์โทร:</label>
+        <input type="tel" id="phone" name="phone" required>
+      </div>
+      <div class="form-group">
+        <label for="contactName">ชื่อผู้ติดต่อ:</label>
+        <input type="text" id="contactName" name="contactName" required>
+      </div>
+      <div class="form-group">
+        <label for="contactPosition">ตำแหน่งผู้ติดต่อ:</label>
+        <input type="text" id="contactPosition" name="contactPosition" required>
+      </div>
+      <div class="form-group">
+        <label for="location">ตำแหน่งปัจจุบัน:</label>
+        <input type="text" id="location" name="location" readonly>
+        <button type="button" id="shareLocation">แชร์ตำแหน่ง</button>
+      </div>
+      <div class="form-group">
         <button type="submit">บันทึกข้อมูล</button>
       </div>
     </form>
   </div>
 
   <script>
-    const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/refs/heads/main/sales.json';
-    const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/refs/heads/main/regions.json';
+    const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/sales.json';
+    const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/regions.json';
 
     async function loadOptions() {
       try {
-        // โหลดข้อมูลชื่อฝ่ายขาย
         const salesResponse = await fetch(salesURL);
+        const regionsResponse = await fetch(regionsURL);
+
+        if (!salesResponse.ok || !regionsResponse.ok) {
+          throw new Error('ไม่สามารถโหลดข้อมูลได้');
+        }
+
         const salesData = await salesResponse.json();
+        const regionsData = await regionsResponse.json();
+
         const salesSelect = document.getElementById('salesName');
+        const regionSelect = document.getElementById('region');
 
         salesData.forEach(({ SalesID, SalesName }) => {
           const option = document.createElement('option');
@@ -100,12 +137,7 @@
           salesSelect.appendChild(option);
         });
 
-        // โหลดข้อมูลจังหวัด
-        const regionsResponse = await fetch(regionsURL);
-        const regionsData = await regionsResponse.json();
-        const regionSelect = document.getElementById('region');
-
-        regionsData.forEach(({ code, name }) => {
+        regionsData.forEach(({ name, code }) => {
           const option = document.createElement('option');
           option.value = code;
           option.textContent = name;
@@ -117,12 +149,54 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadOptions);
+    function shareLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            document.getElementById('location').value = `Latitude: ${latitude}, Longitude: ${longitude}`;
+          },
+          (error) => {
+            alert('ไม่สามารถดึงตำแหน่งได้: ' + error.message);
+          }
+        );
+      } else {
+        alert('เบราว์เซอร์ของคุณไม่รองรับการใช้งาน Geolocation');
+      }
+    }
 
-    document.getElementById('dataForm').addEventListener('submit', (event) => {
+    async function submitForm(event) {
       event.preventDefault();
-      alert('ข้อมูลถูกบันทึกเรียบร้อย!');
-    });
+
+      const formData = new FormData(event.target);
+      const data = {
+        salesName: formData.get('salesName'),
+        region: formData.get('region'),
+        storeName: formData.get('storeName'),
+        phone: formData.get('phone'),
+        contactName: formData.get('contactName'),
+        contactPosition: formData.get('contactPosition'),
+        location: formData.get('location'),
+      };
+
+      try {
+        // จำลองการบันทึกข้อมูล
+        const success = true; // เปลี่ยนเป็น false เพื่อทดสอบกรณีผิดพลาด
+        if (success) {
+          alert('บันทึกข้อมูลสำเร็จ');
+          window.location.reload(); // รีเฟรชหน้าใหม่
+        } else {
+          throw new Error('ส่งข้อมูลไม่สำเร็จ');
+        }
+      } catch (error) {
+        alert('ส่งข้อมูลไม่สำเร็จ: ' + error.message);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadOptions);
+    document.getElementById('dataForm').addEventListener('submit', submitForm);
+    document.getElementById('shareLocation').addEventListener('click', shareLocation);
   </script>
 </body>
 </html>
