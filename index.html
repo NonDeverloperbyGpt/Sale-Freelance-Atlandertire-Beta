@@ -171,25 +171,51 @@
     }
 
     async function submitForm(event) {
-      event.preventDefault();
-      const formData = new FormData(event.target);
-      const data = {};
-      formData.forEach((value, key) => { data[key] = value });
+  event.preventDefault();
+  const formData = new FormData(event.target);
 
-      try {
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
+  // อ่านไฟล์และแปลงเป็น Base64
+  async function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
 
-        const result = await response.json();
-        alert(result.message);
-        event.target.reset();
-      } catch (error) {
-        alert('เกิดข้อผิดพลาด: ' + error.message);
-      }
-    }
+  const photo1 = formData.get("photo1");
+  const photo2 = formData.get("photo2");
+
+  const photo1Base64 = photo1 ? await convertToBase64(photo1) : null;
+  const photo2Base64 = photo2 ? await convertToBase64(photo2) : null;
+
+  const data = {
+    salesName: formData.get("salesName"),
+    region: formData.get("region"),
+    storeName: formData.get("storeName"),
+    phone: formData.get("phone"),
+    contactName: formData.get("contactName"),
+    contactPosition: formData.get("contactPosition"),
+    location: formData.get("location"),
+    photo1: photo1Base64,
+    photo2: photo2Base64,
+  };
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    alert(result.message);
+    event.target.reset();
+  } catch (error) {
+    alert("เกิดข้อผิดพลาด: " + error.message);
+  }
+}
 
     document.addEventListener('DOMContentLoaded', loadOptions);
     document.getElementById('dataForm').addEventListener('submit', submitForm);
