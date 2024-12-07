@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> APP บันทึกข้อมูลร้านค้า Sale Freelance</title>
+  <title>APP บันทึกข้อมูลร้านค้า Sale Freelance</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,7 +13,7 @@
     }
 
     .container {
-      max-width: 600px;
+      max-width: 90%;
       margin: 20px auto;
       background: #fff;
       padding: 20px;
@@ -38,13 +38,16 @@
       font-size: 1em;
     }
 
-    .form-group input, .form-group select, .form-group button {
+    .form-group input,
+    .form-group select,
+    .form-group button {
       width: 100%;
       padding: 12px;
       font-size: 1em;
-      margin: 5px 0;
+      margin-top: 5px;
       border-radius: 4px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 
     .form-group button {
@@ -53,31 +56,45 @@
       border: none;
       cursor: pointer;
       font-size: 1.1em;
+      padding: 10px;
     }
 
     .form-group button:hover {
       background: #0056b3;
     }
+
+    /* ปรับขนาดตัวอักษรและการจัดวางสำหรับมือถือ */
+    @media (max-width: 768px) {
+      h2 {
+        font-size: 1.5em;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group button {
+        font-size: 0.9em;
+        padding: 10px;
+      }
+    }
+
+    /* ปรับขนาดตัวอักษรสำหรับหน้าจอใหญ่ขึ้น */
+    @media (min-width: 769px) {
+      .container {
+        max-width: 600px;
+      }
+    }
   </style>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
 </head>
 <body>
   <div class="container">
-    <h2>APP บันทึกข้อมูลร้านค้า Sale Freelance </h2>
+    <h2>APP บันทึกข้อมูลร้านค้า Sale Freelance</h2>
     <form id="dataForm">
       <div class="form-group">
         <label for="salesName">ชื่อฝ่ายขาย:</label>
-        <select id="salesName" name="salesName" required>
-          <option value="">กรุณาเลือกชื่อฝ่ายขาย</option>
-        </select>
+        <select id="salesName" name="salesName" required></select>
       </div>
       <div class="form-group">
         <label for="region">จังหวัด:</label>
-        <select id="region" name="region" required>
-          <option value="">กรุณาเลือกจังหวัด</option>
-        </select>
+        <select id="region" name="region" required></select>
       </div>
       <div class="form-group">
         <label for="storeName">ชื่อร้านค้า:</label>
@@ -115,95 +132,62 @@
   </div>
 
   <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCYVsCK_DFALuZBPt9q_2mB_eOQHJRi6E8",
-      authDomain: "sale-freelane-github-data.firebaseapp.com",
-      projectId: "sale-freelane-github-data",
-      storageBucket: "sale-freelane-github-data.appspot.com",
-      messagingSenderId: "573539356014",
-      appId: "1:573539356014:web:043396e1cd29eaace3857f",
-      measurementId: "G-939J3TSBLM"
-    };
-
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    const salesURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/sales.json';
-    const regionsURL = 'https://raw.githubusercontent.com/NonDeverloperbyGpt/Sale-Freelance-Atlandertire-Beta/main/regions.json';
+    const apiUrl = "https://script.google.com/macros/s/AKfycbyZOirVcPePu6Xy4-kJ8PXeO9KwJYpZAjogzv37wfAPNnCaIY2griQdU21rAQBgeoMD/exec";
 
     async function loadOptions() {
       try {
-        const salesResponse = await fetch(salesURL);
-        const regionsResponse = await fetch(regionsURL);
-
-        if (!salesResponse.ok || !regionsResponse.ok) {
-          throw new Error('ไม่สามารถโหลดข้อมูลได้');
-        }
-
-        const salesData = await salesResponse.json();
-        const regionsData = await regionsResponse.json();
+        const response = await fetch(`${apiUrl}?action=getSalesAndRegions`);
+        const data = await response.json();
 
         const salesSelect = document.getElementById('salesName');
         const regionSelect = document.getElementById('region');
 
-        salesData.forEach(({ SalesID, SalesName }) => {
+        data.sales.forEach(([SalesID, SalesName]) => {
           const option = document.createElement('option');
           option.value = SalesID;
           option.textContent = SalesName;
           salesSelect.appendChild(option);
         });
 
-        regionsData.forEach(({ name, code }) => {
+        data.regions.forEach(([Region]) => {
           const option = document.createElement('option');
-          option.value = code;
-          option.textContent = name;
+          option.value = Region;
+          option.textContent = Region;
           regionSelect.appendChild(option);
         });
       } catch (error) {
-        console.error('Error loading options:', error);
-        alert('ไม่สามารถโหลดข้อมูลได้');
+        alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
       }
     }
 
     function shareLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            document.getElementById('location').value = `Latitude: ${latitude}, Longitude: ${longitude}`;
-          },
-          (error) => {
-            alert('ไม่สามารถดึงตำแหน่งได้: ' + error.message);
-          }
-        );
+        navigator.geolocation.getCurrentPosition((position) => {
+          document.getElementById('location').value = `Lat: ${position.coords.latitude}, Long: ${position.coords.longitude}`;
+        });
       } else {
-        alert('เบราว์เซอร์ของคุณไม่รองรับการใช้งาน Geolocation');
+        alert('เบราว์เซอร์ไม่รองรับการแชร์ตำแหน่ง');
       }
     }
 
     async function submitForm(event) {
       event.preventDefault();
-
       const formData = new FormData(event.target);
-      const data = {
-        salesName: formData.get('salesName'),
-        region: formData.get('region'),
-        storeName: formData.get('storeName'),
-        phone: formData.get('phone'),
-        contactName: formData.get('contactName'),
-        contactPosition: formData.get('contactPosition'),
-        location: formData.get('location'),
-      };
+      const data = {};
+      formData.forEach((value, key) => { data[key] = value });
 
       try {
-        await db.collection('salesData').add(data);
-        alert('บันทึกข้อมูลสำเร็จ');
-        window.location.reload();
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        alert(result.message);
+        event.target.reset();
       } catch (error) {
-        alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message);
+        alert('เกิดข้อผิดพลาด: ' + error.message);
       }
     }
 
