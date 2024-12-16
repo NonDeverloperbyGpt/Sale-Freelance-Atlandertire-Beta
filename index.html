@@ -11,7 +11,6 @@
       padding: 0;
       background: #f5f5f5;
     }
-
     .container {
       max-width: 90%;
       margin: 20px auto;
@@ -21,23 +20,19 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       box-sizing: border-box;
     }
-
     h2 {
       text-align: center;
       margin-bottom: 20px;
       font-size: 1.8em;
     }
-
     .form-group {
       margin-bottom: 15px;
     }
-
     .form-group label {
       display: block;
       margin-bottom: 5px;
       font-size: 1em;
     }
-
     .form-group input,
     .form-group select,
     .form-group button {
@@ -49,7 +44,6 @@
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
-
     .form-group button {
       background: #007bff;
       color: #fff;
@@ -58,12 +52,9 @@
       font-size: 1.1em;
       padding: 10px;
     }
-
     .form-group button:hover {
       background: #0056b3;
     }
-
-    /* ปรับขนาดตัวอักษรและการจัดวางสำหรับมือถือ */
     @media (max-width: 768px) {
       h2 {
         font-size: 1.5em;
@@ -75,8 +66,6 @@
         padding: 10px;
       }
     }
-
-    /* ปรับขนาดตัวอักษรสำหรับหน้าจอใหญ่ขึ้น */
     @media (min-width: 769px) {
       .container {
         max-width: 600px;
@@ -132,7 +121,8 @@
   </div>
 
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbz7r30wye6lwJwtRMYbIWMkuUsQDyw1xG5PZxpYVWgQCE6VDlFKpGBdoDGZfYe4wZPT/exec";
+    // ใส่ URL ของ Web App ที่คุณ Deploy จาก Apps Script ลงไปใน apiUrl
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzu2WC_cwEaFptBF8AN_5P_3n6JRiHq7PaW-MAOIEvlATc5g8T94L0XL76JEOyzE3I3/exec"; 
 
     async function loadOptions() {
       try {
@@ -171,51 +161,51 @@
     }
 
     async function submitForm(event) {
-  event.preventDefault();
-  const formData = new FormData(event.target);
+      event.preventDefault();
+      const formData = new FormData(event.target);
 
-  // อ่านไฟล์และแปลงเป็น Base64
-  async function convertToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
+      // อ่านไฟล์และแปลงเป็น Base64
+      async function convertToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(",")[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
 
-  const photo1 = formData.get("photo1");
-  const photo2 = formData.get("photo2");
+      const photo1 = formData.get("photo1");
+      const photo2 = formData.get("photo2");
 
-  const photo1Base64 = photo1 ? await convertToBase64(photo1) : null;
-  const photo2Base64 = photo2 ? await convertToBase64(photo2) : null;
+      const photo1Base64 = photo1 ? await convertToBase64(photo1) : null;
+      const photo2Base64 = photo2 ? await convertToBase64(photo2) : null;
 
-  const data = {
-    salesName: formData.get("salesName"),
-    region: formData.get("region"),
-    storeName: formData.get("storeName"),
-    phone: formData.get("phone"),
-    contactName: formData.get("contactName"),
-    contactPosition: formData.get("contactPosition"),
-    location: formData.get("location"),
-    photo1: photo1Base64,
-    photo2: photo2Base64,
-  };
+      const data = {
+        salesName: formData.get("salesName"),
+        region: formData.get("region"),
+        storeName: formData.get("storeName"),
+        phone: formData.get("phone"),
+        contactName: formData.get("contactName"),
+        contactPosition: formData.get("contactPosition"),
+        location: formData.get("location"),
+        photo1: photo1Base64,
+        photo2: photo2Base64,
+      };
 
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
 
-    const result = await response.json();
-    alert(result.message);
-    event.target.reset();
-  } catch (error) {
-    alert("เกิดข้อผิดพลาด: " + error.message);
-  }
-}
+        const result = await response.json();
+        alert(result.message);
+        event.target.reset();
+      } catch (error) {
+        alert("เกิดข้อผิดพลาด: " + error.message);
+      }
+    }
 
     document.addEventListener('DOMContentLoaded', loadOptions);
     document.getElementById('dataForm').addEventListener('submit', submitForm);
