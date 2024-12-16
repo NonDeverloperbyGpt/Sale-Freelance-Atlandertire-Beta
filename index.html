@@ -122,33 +122,38 @@
 
   <script>
     // ใส่ URL ของ Web App ที่คุณ Deploy จาก Apps Script ลงไปใน apiUrl
-    const apiUrl = "https://script.google.com/macros/s/AKfycbzu2WC_cwEaFptBF8AN_5P_3n6JRiHq7PaW-MAOIEvlATc5g8T94L0XL76JEOyzE3I3/exec"; 
+    const apiUrl = "https://script.google.com/macros/s/AKfycbwAKLMGANVo4xtcSXSqUWAb43jeNi4mIqr7nLIMmecQkZEjm2apxqXOLqBhUCUXv-O3/exec"; // URL ของ Apps Script Web App
 
-    async function loadOptions() {
-      try {
-        const response = await fetch(`${apiUrl}?action=getSalesAndRegions`);
-        const data = await response.json();
+async function loadOptions() {
+  try {
+    // อย่าใส่ headers หรือ content-type ใด ๆ ในการเรียกใช้ GET ถ้าไม่จำเป็น
+    // แค่เรียก GET เฉย ๆ ก็เพียงพอ
+    const response = await fetch(`${apiUrl}?action=getSalesAndRegions`);
+    const data = await response.json();
 
-        const salesSelect = document.getElementById('salesName');
-        const regionSelect = document.getElementById('region');
+    const salesSelect = document.getElementById('salesName');
+    const regionSelect = document.getElementById('region');
 
-        data.sales.forEach(([SalesID, SalesName]) => {
-          const option = document.createElement('option');
-          option.value = SalesID;
-          option.textContent = SalesName;
-          salesSelect.appendChild(option);
-        });
+    // data.sales และ data.regions ควรเป็นข้อมูล array ของ array
+    data.sales.forEach(([SalesID, SalesName]) => {
+      const option = document.createElement('option');
+      option.value = SalesID;
+      option.textContent = SalesName;
+      salesSelect.appendChild(option);
+    });
 
-        data.regions.forEach(([Region]) => {
-          const option = document.createElement('option');
-          option.value = Region;
-          option.textContent = Region;
-          regionSelect.appendChild(option);
-        });
-      } catch (error) {
-        alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
-      }
-    }
+    data.regions.forEach(([Region]) => {
+      const option = document.createElement('option');
+      option.value = Region;
+      option.textContent = Region;
+      regionSelect.appendChild(option);
+    });
+
+  } catch (error) {
+    alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+    console.error(error);
+  }
+}
 
     function shareLocation() {
       if (navigator.geolocation) {
